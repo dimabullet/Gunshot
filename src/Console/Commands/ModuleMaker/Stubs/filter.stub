@@ -1,0 +1,46 @@
+<?php
+
+namespace DummyNamespace;
+
+use App\Filters\Doctrine\CoreFilter;
+use DummyContractNamespace;
+use DummyRepositoryNamespace;
+use DummyTransformerNamespace;
+use Doctrine\ORM\QueryBuilder;
+use Illuminate\Http\Request;
+
+class DummyClass extends CoreFilter implements DummyContract
+{
+    /**
+     * @param DummyRepository $repository
+     * @param Request $request
+     */
+    public function __construct(DummyRepository $repository, Request $request)
+    {
+        $this->setRepository($repository);
+        $this->setRequest($request);
+        $this->setTransformer(new DummyTransformer());
+    }
+
+    /**
+     * @return array
+     */
+    public function filter()
+    {
+        $query = $this->createQueryBuilder();
+
+        $this->customFilter($query);
+        $results = $this->paginate($query);
+
+        return $this->transform($results);
+    }
+
+
+    /**
+     * @param QueryBuilder $qb
+     */
+    protected function customFilter(QueryBuilder &$qb)
+    {
+        $filters = $this->getFilters();
+    }
+}

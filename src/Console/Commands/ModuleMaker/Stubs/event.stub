@@ -1,0 +1,33 @@
+<?php
+
+namespace DummyNamespace;
+
+use DummyEntityNamespace;
+use Illuminate\Broadcasting\Channel;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Broadcasting\PrivateChannel;
+use Illuminate\Broadcasting\PresenceChannel;
+use Illuminate\Foundation\Events\Dispatchable;
+use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+
+class DummyClass
+{
+    use Dispatchable;
+
+    /**
+     * @var DummyEntity
+     */
+    private $dummyEntityVariable;
+
+    /**
+     * DummyClass constructor.
+     * @param DummyEntity $dummyEntityVariable
+     */
+    public function __construct(DummyEntity $dummyEntityVariable)
+    {
+        $this->dummyEntityVariable = $dummyEntityVariable;
+    }
+
+}
+

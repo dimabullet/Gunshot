@@ -1,0 +1,36 @@
+<?php
+
+namespace DummyNamespace;
+
+use DummyContractNamespace;
+use App\Traits\CurrentUserTrait;
+use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Http\Request;
+use LaravelDoctrine\ORM\Facades\EntityManager;
+
+class DummyClass
+{
+    use Dispatchable, CurrentUserTrait;
+
+    /**
+     * @var DummyContract
+     */
+    private $dummyRepoName;
+
+    /**
+     * DummyClass constructor.
+     */
+    public function __construct()
+    {
+        $this->dummyRepoName = app(DummyContract::class);
+    }
+
+    /**
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function handle()
+    {
+    }
+
+}

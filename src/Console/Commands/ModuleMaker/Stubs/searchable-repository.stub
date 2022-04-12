@@ -1,0 +1,11 @@
+<?php
+
+namespace DummyNamespace;
+
+use DummyContractNamespace;
+use App\Repositories\Core\CoreRepository;
+
+class DummyClass extends CoreRepository implements DummyContract
+{
+
+}

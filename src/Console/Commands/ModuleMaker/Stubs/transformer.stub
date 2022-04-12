@@ -1,0 +1,26 @@
+<?php
+
+namespace DummyNamespace;
+
+use DummyEntityNamespace;
+use League\Fractal\TransformerAbstract;
+
+class DummyClass extends TransformerAbstract
+{
+    /**
+     * List of resources possible to include
+     *
+     * @var array
+     */
+    protected $availableIncludes = [];
+
+    /**
+     * @param DummyEntity $dummyEntityVariable
+     * @return array
+     */
+    public function transform(DummyEntity $dummyEntityVariable)
+    {
+        return [
+        ];
+    }
+}
