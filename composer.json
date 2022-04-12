@@ -17,7 +17,11 @@
     ],
     "require": {
         "php": "^7.4|^8.0",
-        "illuminate/support": "^8.0"
+        "illuminate/support": "^8.0",
+        "laravel-doctrine/acl": "^1.0",
+        "laravel-doctrine/extensions": "^1.0",
+        "laravel-doctrine/migrations": "^1.2",
+        "laravel-doctrine/orm": "^1.7"
     },
     "require-dev": {
         "orchestra/testbench": "^6.0",
