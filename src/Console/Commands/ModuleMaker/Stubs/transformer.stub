@@ -23,4 +23,14 @@ class DummyClass extends TransformerAbstract
         return [
         ];
     }
+
+    /**
+     * @return array
+     */
+    public function doctrineMapping()
+    {
+        return [
+            'id'    => 'e.id',
+        ];
+    }
 }
