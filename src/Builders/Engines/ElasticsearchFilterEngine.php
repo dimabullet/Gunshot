@@ -2,10 +2,15 @@
 
 namespace BulletDigitalSolutions\Gunshot\Builders\Engines;
 
-use BulletDigitalSolutions\Gunshot\Contracts\QueryEngineContract;
+use BulletDigitalSolutions\Gunshot\Contracts\FilterEngineContract;
 
-class ElasticsearchQueryEngine implements QueryEngineContract
+class ElasticsearchFilterEngine implements FilterEngineContract
 {
+    /**
+     * This created a query string based on the following documentation:
+     * https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html
+     */
+
     /**
      * @return string
      */
@@ -14,22 +19,30 @@ class ElasticsearchQueryEngine implements QueryEngineContract
         if (count($filters) === 0) {
             return '*';
         }
+
         $i = 0;
-
         $filterStrings = [];
-        foreach ($filters as $filter) {
-            if ($filter['type'] == 'where') {
-                $filterStrings[] = $this->toWhereString($filter, (bool)$i);
-            } elseif ($filter['type'] == 'or_where') {
-                $filterStrings[] = $this->toOrWhereString($filter);
-            } elseif ($filter['type'] == 'where_in') {
-                $filterStrings[] = $this->toWhereInString($filter, (bool)$i);
-            } elseif ($filter['type'] == 'sub') {
-                $filterStrings[] = $this->toSubQueryString($filter['filters'], (bool)$i);
-            }
 
+        foreach ($filters as $filter) {
+            $type = $filter['type'];
+
+            switch ($type) {
+                case 'where':
+                    $filterStrings[] = $this->toWhereString($filter, (bool)$i);
+                    break;
+                case 'or_where':
+                    $filterStrings[] = $this->toOrWhereString($filter);
+                    break;
+                case 'where_in':
+                    $filterStrings[] = $this->toWhereInString($filter);
+                    break;
+                case 'sub':
+                    $filterStrings[] = $this->toSubQueryString($filter, (bool)$i);
+                    break;
+            }
             $i++;
         }
+
         return implode(' ', $filterStrings);
     }
 
@@ -88,9 +101,14 @@ class ElasticsearchQueryEngine implements QueryEngineContract
         return '(' . $string . ')';
     }
 
+    /**
+     * @param $filters
+     * @param $and
+     * @return string
+     */
     public function toSubQueryString($filters, $and = false)
     {
-        $string = '(' . $this->toString($filters) . ')';
+        $string = '(' . $this->toString($filters['filters']) . ')';
 
         if ($and) {
             $string = 'AND ' . $string;

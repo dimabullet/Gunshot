@@ -2,7 +2,7 @@
 
 namespace BulletDigitalSolutions\Gunshot\Builders;
 
-use BulletDigitalSolutions\Gunshot\Contracts\QueryEngineContract;
+use BulletDigitalSolutions\Gunshot\Contracts\FilterEngineContract;
 
 class FilterStringBuilder
 {

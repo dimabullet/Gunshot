@@ -2,7 +2,7 @@
 
 namespace BulletDigitalSolutions\Gunshot\Contracts;
 
-interface QueryEngineContract
+interface FilterEngineContract
 {
     /**
      * @return string
