@@ -1,6 +1,6 @@
 <?php
 
-namespace BulletDigitalSolutions\Gunshot\Entities\Traits;
+namespace BulletDigitalSolutions\Gunshot\Traits\Entities;
 
 trait Activatable
 {
