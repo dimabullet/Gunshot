@@ -1,5 +1,7 @@
 <?php
 
+//TODO - This is not required anymore
+
 namespace BulletDigitalSolutions\Gunshot\Concerns\Cashier;
 
 use Doctrine\ORM\EntityManagerInterface;

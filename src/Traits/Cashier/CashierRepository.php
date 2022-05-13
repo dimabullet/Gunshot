@@ -1,5 +1,7 @@
 <?php
 
+//TODO - This is not required anymore
+
 namespace BulletDigitalSolutions\Gunshot\Traits\Cashier;
 
 use Illuminate\Support\Arr;

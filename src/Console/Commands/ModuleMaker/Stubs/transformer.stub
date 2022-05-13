@@ -12,7 +12,7 @@ class DummyClass extends TransformerAbstract
      *
      * @var array
      */
-    protected $availableIncludes = [];
+    protected array $availableIncludes = [];
 
     /**
      * @param DummyEntity $dummyEntityVariable
