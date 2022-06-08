@@ -22,7 +22,9 @@
         "laravel-doctrine/extensions": "^1.0",
         "laravel-doctrine/migrations": "*",
         "laravel-doctrine/orm": "^1.7",
-        "laravel/cashier": "^13.10"
+        "laravel/cashier": "^13.10",
+        "laravel/fortify": "^1.13",
+        "webpatser/laravel-uuid": "^4.0"
     },
     "require-dev": {
         "orchestra/testbench": "^6.0",

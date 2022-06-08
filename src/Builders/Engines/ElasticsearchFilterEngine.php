@@ -34,7 +34,7 @@ class ElasticsearchFilterEngine implements FilterEngineContract
                     $filterStrings[] = $this->toOrWhereString($filter);
                     break;
                 case 'where_in':
-                    $filterStrings[] = $this->toWhereInString($filter);
+                    $filterStrings[] = $this->toWhereInString($filter, (bool)$i);
                     break;
                 case 'sub':
                     $filterStrings[] = $this->toSubQueryString($filter, (bool)$i);
@@ -78,7 +78,7 @@ class ElasticsearchFilterEngine implements FilterEngineContract
      * @param $filter
      * @return string
      */
-    public function toWhereInString($filter)
+    public function toWhereInString($filter, bool $and = false)
     {
         $string = '';
         $i = 0;
@@ -98,7 +98,14 @@ class ElasticsearchFilterEngine implements FilterEngineContract
             $i++;
         }
 
-        return '(' . $string . ')';
+        $string = '(' . $string . ')';
+
+        if ($and) {
+            $string = 'AND ' . $string;
+        };
+
+        return $string;
+
     }
 
     /**

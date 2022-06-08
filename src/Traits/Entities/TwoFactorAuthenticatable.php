@@ -8,7 +8,10 @@ use BaconQrCode\Renderer\ImageRenderer;
 use BaconQrCode\Renderer\RendererStyle\Fill;
 use BaconQrCode\Renderer\RendererStyle\RendererStyle;
 use BaconQrCode\Writer;
+use Carbon\Carbon;
 use Laravel\Fortify\Contracts\TwoFactorAuthenticationProvider;
+use Laravel\Fortify\Fortify;
+use Laravel\Fortify\RecoveryCode;
 
 trait TwoFactorAuthenticatable
 {
@@ -25,8 +28,7 @@ trait TwoFactorAuthenticatable
     protected $twoFactorRecoveryCodes;
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
-     * @var DateTime
+     * @ORM\Column(type="carbondatetime", nullable=true)
      */
     protected $twoFactorConfirmedAt;
 
@@ -63,17 +65,18 @@ trait TwoFactorAuthenticatable
     }
 
     /**
-     * @return DateTime
+     * @return Carbon|null
      */
-    public function getTwoFactorConfirmedAt(): DateTime
+    public function getTwoFactorConfirmedAt()
     {
         return $this->twoFactorConfirmedAt;
     }
 
     /**
-     * @param DateTime $twoFactorConfirmedAt
+     * @param Carbon|null $twoFactorConfirmedAt
+     * @return void
      */
-    public function setTwoFactorConfirmedAt(DateTime $twoFactorConfirmedAt): void
+    public function setTwoFactorConfirmedAt(Carbon $twoFactorConfirmedAt = null): void
     {
         $this->twoFactorConfirmedAt = $twoFactorConfirmedAt;
     }
@@ -100,7 +103,7 @@ trait TwoFactorAuthenticatable
      */
     public function recoveryCodes()
     {
-        return json_decode(decrypt($this->two_factor_recovery_codes), true);
+        return json_decode(decrypt($this->getTwoFactorRecoveryCodes()), true);
     }
 
     /**
@@ -115,7 +118,7 @@ trait TwoFactorAuthenticatable
             'two_factor_recovery_codes' => encrypt(str_replace(
                 $code,
                 RecoveryCode::generate(),
-                decrypt($this->two_factor_recovery_codes)
+                decrypt($this->getTwoFactorRecoveryCodes())
             )),
         ])->save();
     }

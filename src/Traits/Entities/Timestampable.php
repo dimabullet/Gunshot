@@ -2,7 +2,6 @@
 
 namespace BulletDigitalSolutions\Gunshot\Traits\Entities;
 
-
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
