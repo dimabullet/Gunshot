@@ -90,5 +90,4 @@ trait TwoFactorRepository
 
         return $user;
     }
-
 }

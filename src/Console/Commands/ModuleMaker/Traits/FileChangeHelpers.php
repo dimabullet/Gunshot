@@ -2,21 +2,17 @@
 
 namespace BulletDigitalSolutions\Gunshot\Console\Commands\ModuleMaker\Traits;
 
-use Illuminate\Support\Str;
-
 trait FileChangeHelpers
 {
-
     /**
-     * @var String
+     * @var string
      */
     protected $importsSearchStart = '// Generated Imports';
 
     /**
-     * @var String
+     * @var string
      */
     protected $importsSearchEnd = '// End Generated Imports';
-
 
     /**
      * @return string
@@ -28,6 +24,7 @@ trait FileChangeHelpers
 
     /**
      * @return string
+     *
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     protected function getConfigFile(): string
@@ -37,6 +34,7 @@ trait FileChangeHelpers
 
     /**
      * @return string
+     *
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     protected function getServiceProviderFile(): string
@@ -52,18 +50,17 @@ trait FileChangeHelpers
         return app_path(sprintf('Providers/%s.php', $this->serviceProvider));
     }
 
-
     /**
-     * @param string $file
+     * @param  string  $file
      * @return array
      */
     protected function getArrayFromFile(string $file, $searchStart = null, $searchEnd = null): array
     {
-        if (!$searchStart) {
+        if (! $searchStart) {
             $searchStart = $this->searchStart;
         }
 
-        if (!$searchEnd) {
+        if (! $searchEnd) {
             $searchEnd = $this->searchEnd;
         }
 
@@ -74,6 +71,7 @@ trait FileChangeHelpers
 
         // Convert rows to array
         $array = explode(PHP_EOL, $array);
+
         return array_map('trim', $array);
     }
 
@@ -85,11 +83,14 @@ trait FileChangeHelpers
      */
     public function getTextBetween($string, $start, $end)
     {
-        $string = ' ' . $string;
+        $string = ' '.$string;
         $ini = strpos($string, $start);
-        if ($ini == 0) return '';
+        if ($ini == 0) {
+            return '';
+        }
         $ini += strlen($start);
         $len = strpos($string, $end, $ini) - $ini;
+
         return substr($string, $ini, $len);
     }
 
@@ -100,29 +101,34 @@ trait FileChangeHelpers
      * @param $replacement
      * @return mixed
      */
-    public function replaceTextBetween($string, $start, $end, $replacement) {
-        $string = ' ' . $string;
+    public function replaceTextBetween($string, $start, $end, $replacement)
+    {
+        $string = ' '.$string;
         $ini = strpos($string, $start);
-        if ($ini == 0) return '';
+        if ($ini == 0) {
+            return '';
+        }
         $ini += strlen($start);
         $len = strpos($string, $end, $ini) - $ini;
+
         return substr_replace($string, $replacement, $ini, $len);
     }
 
     /**
-     * @param array $array
+     * @param  array  $array
      * @return array
      */
     protected function addNewRowToArray(array $array): array
     {
-        if (!in_array($this->getNewRow(), $array)) {
+        if (! in_array($this->getNewRow(), $array)) {
             $array[] = $this->getNewRow();
         }
+
         return $array;
     }
 
     /**
-     * @param array $facades
+     * @param  array  $facades
      * @return array
      */
     protected function alphabetiseArray(array $facades): array
@@ -131,27 +137,28 @@ trait FileChangeHelpers
     }
 
     /**
-     * @param string $file
-     * @param string $newString
+     * @param  string  $file
+     * @param  string  $newString
      * @return array|string|string[]
      */
     protected function replaceTextInFile(string $file, string $newString, $searchStart = null, $searchEnd = null)
     {
-        if (!$searchStart) {
+        if (! $searchStart) {
             $searchStart = $this->searchStart;
         }
 
-        if (!$searchEnd) {
+        if (! $searchEnd) {
             $searchEnd = $this->searchEnd;
         }
 
         $file = $this->replaceTextBetween($file, $searchStart, $searchEnd, $newString);
+
         return str_replace(' <?php', '<?php', $file);
     }
 
     /**
-     * @param string $file
-     * @param string $filePath
+     * @param  string  $file
+     * @param  string  $filePath
      * @return void
      */
     protected function saveFile(string $file, string $filePath): void
@@ -160,7 +167,7 @@ trait FileChangeHelpers
     }
 
     /**
-     * @param array $viewFolders
+     * @param  array  $viewFolders
      * @return string
      */
     protected function convertArrayBackToString(array $array, $tabs = 2, $postTabs = 1): string
@@ -168,8 +175,9 @@ trait FileChangeHelpers
         $array = implode(PHP_EOL, $array);
         $tabsString = str_repeat('    ', $tabs);
         $postTabs = str_repeat('    ', $postTabs);
-        $array = str_replace(PHP_EOL, PHP_EOL . $tabsString, $array);
-        return PHP_EOL . $tabsString . $array . PHP_EOL . $postTabs;
+        $array = str_replace(PHP_EOL, PHP_EOL.$tabsString, $array);
+
+        return PHP_EOL.$tabsString.$array.PHP_EOL.$postTabs;
     }
 
     /**
@@ -207,7 +215,7 @@ trait FileChangeHelpers
         $importArray = $this->getArrayFromFile($file, $this->importsSearchStart, $this->importsSearchEnd);
 
         foreach ($imports as $import) {
-            if (!in_array($this->importRow($import), $importArray)) {
+            if (! in_array($this->importRow($import), $importArray)) {
                 $importArray[] = $this->importRow($import);
             }
         }

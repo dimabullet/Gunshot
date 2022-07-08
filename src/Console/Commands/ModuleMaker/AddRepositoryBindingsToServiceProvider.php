@@ -30,17 +30,17 @@ class AddRepositoryBindingsToServiceProvider extends Command
     private $files;
 
     /**
-     * @var String
+     * @var string
      */
     protected $serviceProvider = 'AppServiceProvider';
 
     /**
-     * @var String
+     * @var string
      */
     protected $searchStart = 'protected $repoBindings = [';
 
     /**
-     * @var String
+     * @var string
      */
     protected $searchEnd = '];';
 

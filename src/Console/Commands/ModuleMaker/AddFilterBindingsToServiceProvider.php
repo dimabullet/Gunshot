@@ -30,17 +30,17 @@ class AddFilterBindingsToServiceProvider extends Command
     private $files;
 
     /**
-     * @var String
+     * @var string
      */
     protected $serviceProvider = 'AppServiceProvider';
 
     /**
-     * @var String
+     * @var string
      */
     protected $searchStart = 'protected $filterBindings = [';
 
     /**
-     * @var String
+     * @var string
      */
     protected $searchEnd = '];';
 

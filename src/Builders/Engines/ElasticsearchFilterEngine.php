@@ -28,16 +28,16 @@ class ElasticsearchFilterEngine implements FilterEngineContract
 
             switch ($type) {
                 case 'where':
-                    $filterStrings[] = $this->toWhereString($filter, (bool)$i);
+                    $filterStrings[] = $this->toWhereString($filter, (bool) $i);
                     break;
                 case 'or_where':
                     $filterStrings[] = $this->toOrWhereString($filter);
                     break;
                 case 'where_in':
-                    $filterStrings[] = $this->toWhereInString($filter, (bool)$i);
+                    $filterStrings[] = $this->toWhereInString($filter, (bool) $i);
                     break;
                 case 'sub':
-                    $filterStrings[] = $this->toSubQueryString($filter, (bool)$i);
+                    $filterStrings[] = $this->toSubQueryString($filter, (bool) $i);
                     break;
             }
             $i++;
@@ -52,18 +52,18 @@ class ElasticsearchFilterEngine implements FilterEngineContract
      */
     public function toWhereString($filter, bool $and = false)
     {
-        $string = '(' . $filter['field'] . ':' . $filter['value'] . ')';
+        $string = '('.$filter['field'].':'.$filter['value'].')';
 
         if ($and) {
-            $string = 'AND ' . $string;
+            $string = 'AND '.$string;
         }
 
         if ($filter['operator'] == '!=' || $filter['operator'] == '<>') {
-            $string = 'NOT ' . $string;
+            $string = 'NOT '.$string;
         }
+
         return $string;
     }
-
 
     /**
      * @param $filter
@@ -71,7 +71,7 @@ class ElasticsearchFilterEngine implements FilterEngineContract
      */
     public function toOrWhereString($filter)
     {
-        return 'OR ' . $this->toWhereString($filter, false);
+        return 'OR '.$this->toWhereString($filter, false);
     }
 
     /**
@@ -83,7 +83,7 @@ class ElasticsearchFilterEngine implements FilterEngineContract
         $string = '';
         $i = 0;
 
-        foreach($filter['value'] as $value) {
+        foreach ($filter['value'] as $value) {
             $filter = [
                 'field' => $filter['field'],
                 'value' => $value,
@@ -94,18 +94,17 @@ class ElasticsearchFilterEngine implements FilterEngineContract
                 $string .= ' OR ';
             }
 
-            $string .=  $this->toWhereString($filter);
+            $string .= $this->toWhereString($filter);
             $i++;
         }
 
-        $string = '(' . $string . ')';
+        $string = '('.$string.')';
 
         if ($and) {
-            $string = 'AND ' . $string;
-        };
+            $string = 'AND '.$string;
+        }
 
         return $string;
-
     }
 
     /**
@@ -115,13 +114,12 @@ class ElasticsearchFilterEngine implements FilterEngineContract
      */
     public function toSubQueryString($filters, $and = false)
     {
-        $string = '(' . $this->toString($filters['filters']) . ')';
+        $string = '('.$this->toString($filters['filters']).')';
 
         if ($and) {
-            $string = 'AND ' . $string;
+            $string = 'AND '.$string;
         }
 
         return $string;
     }
-
 }

@@ -11,7 +11,7 @@ trait MakerHelpers
      */
     private function getContractNamespace()
     {
-        return 'App\\Modules\\' . str_replace('/', '\\', $this->argument('contract'));
+        return 'App\\Modules\\'.str_replace('/', '\\', $this->argument('contract'));
     }
 
     /**
@@ -40,7 +40,7 @@ trait MakerHelpers
      */
     private function getEntityNamespace()
     {
-        return 'App\\Entities\\' . $this->getEntityName();
+        return 'App\\Entities\\'.$this->getEntityName();
     }
 
     /**
@@ -64,7 +64,7 @@ trait MakerHelpers
      */
     private function getEntityRepoName()
     {
-        return Str::camel($this->argument('entity')) . 'Repo';
+        return Str::camel($this->argument('entity')).'Repo';
     }
 
     /**
@@ -87,7 +87,7 @@ trait MakerHelpers
      */
     private function getRepositoryNamespace()
     {
-        return 'App\\Modules\\' . str_replace('/', '\\', $this->argument('repository'));
+        return 'App\\Modules\\'.str_replace('/', '\\', $this->argument('repository'));
     }
 
     /**
@@ -107,6 +107,7 @@ trait MakerHelpers
     {
         $stub = str_replace(['DummyRepositoryNamespace', '{{ class }}', '{{class}}'], $this->getRepositoryNamespace(), $stub);
         $stub = str_replace(['DummyRepository', '{{ class }}', '{{class}}'], $this->getRepositoryName(), $stub);
+
         return $this;
     }
 
@@ -115,7 +116,7 @@ trait MakerHelpers
      */
     private function getTransformerNamespace()
     {
-        return 'App\\Modules\\' . str_replace('/', '\\', $this->argument('transformer'));
+        return 'App\\Modules\\'.str_replace('/', '\\', $this->argument('transformer'));
     }
 
     /**
@@ -135,6 +136,7 @@ trait MakerHelpers
     {
         $stub = str_replace(['DummyTransformerNamespace', '{{ class }}', '{{class}}'], $this->getTransformerNamespace(), $stub);
         $stub = str_replace(['DummyTransformer', '{{ class }}', '{{class}}'], $this->getTransformerName(), $stub);
+
         return $this;
     }
 
@@ -143,7 +145,7 @@ trait MakerHelpers
      */
     private function getEventNamespace()
     {
-        return 'App\\Modules\\' . str_replace('/', '\\', $this->argument('event'));
+        return 'App\\Modules\\'.str_replace('/', '\\', $this->argument('event'));
     }
 
     /**
@@ -163,6 +165,7 @@ trait MakerHelpers
     {
         $stub = str_replace(['DummyEventNamespace', '{{ class }}', '{{class}}'], $this->getEventNamespace(), $stub);
         $stub = str_replace(['DummyEvent', '{{ class }}', '{{class}}'], $this->getEventName(), $stub);
+
         return $this;
     }
 
@@ -174,7 +177,7 @@ trait MakerHelpers
      */
     protected function getDefaultNamespace($rootNamespace)
     {
-        $namespace =  $rootNamespace.'\Modules';
+        $namespace = $rootNamespace.'\Modules';
 
         if ($directory = $this->argument('directory')) {
             $directory = str_replace('/', '\\', $directory);
@@ -183,5 +186,4 @@ trait MakerHelpers
 
         return $namespace;
     }
-
 }

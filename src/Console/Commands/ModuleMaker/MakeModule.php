@@ -150,9 +150,9 @@ class MakeModule extends Command
      */
     protected function getModuleDirectory($subdirectory = null)
     {
-        $moduleDirectory =  $this->rootDirectory . '/' . $this->argument('directory');
+        $moduleDirectory = $this->rootDirectory.'/'.$this->argument('directory');
         if ($subdirectory) {
-            $moduleDirectory = $moduleDirectory . '/' . $subdirectory;
+            $moduleDirectory = $moduleDirectory.'/'.$subdirectory;
         }
 
         return $moduleDirectory;
@@ -164,13 +164,12 @@ class MakeModule extends Command
     protected function makeViewFolder()
     {
         $this->makeDirectory($this->getModuleDirectory('Views'));
-        $this->makeDirectory($this->getModuleDirectory('Views/' . $this->getViewFolderName()));
+        $this->makeDirectory($this->getModuleDirectory('Views/'.$this->getViewFolderName()));
 
         Artisan::call('module:config:view:add', [
             'directory' => $this->getModuleDirectory('Views'),
         ]);
     }
-
 
     /**
      * @return void
@@ -183,9 +182,9 @@ class MakeModule extends Command
         ]);
 
         Artisan::call('make:module:repository', [
-            'name'      => $this->getRepositoryName(),
+            'name' => $this->getRepositoryName(),
             'directory' => $this->getRepositoryDirectory(),
-            'contract'  => $this->getContractDirectory() . '/' . $this->getContractName(),
+            'contract' => $this->getContractDirectory().'/'.$this->getContractName(),
             'isSearchable' => $isSearchable,
         ]);
 
@@ -203,9 +202,9 @@ class MakeModule extends Command
     protected function makeFacade()
     {
         Artisan::call('make:module:facade', [
-            'name'      => $this->getEntityName(),
+            'name' => $this->getEntityName(),
             'directory' => $this->getFacadesDirectory(),
-            'contract'  => $this->getContractPath(),
+            'contract' => $this->getContractPath(),
         ]);
 
         Artisan::call('module:config:facade:add', [
@@ -236,10 +235,10 @@ class MakeModule extends Command
         ]);
 
         Artisan::call('make:module:filter', [
-            'name'      => $this->getFilterName(),
+            'name' => $this->getFilterName(),
             'directory' => $this->getFilterDirectory(),
-            'entity'    => $this->getEntityName(),
-            'contract'  => $this->getFilterContractPath(),
+            'entity' => $this->getEntityName(),
+            'contract' => $this->getFilterContractPath(),
             'repository' => $this->getRepositoryPath(),
             'transformer' => $this->getTransformerPath(),
         ]);
@@ -263,17 +262,17 @@ class MakeModule extends Command
             'entity' => $this->getEntityName(),
         ]);
 
-        $listenerName = $name . 'Listener';
+        $listenerName = $name.'Listener';
 
         Artisan::call('make:module:listener', [
             'name' => $listenerName,
             'directory' => $this->getListenerDirectory(),
-            'event' => $this->getEventDirectory() . '/' . $name,
+            'event' => $this->getEventDirectory().'/'.$name,
         ]);
 
         Artisan::call('module:config:event:bind', [
-            'event' => $this->getEventDirectory() . '/' . $name,
-            'listener' => $this->getListenerDirectory() . '/' . $listenerName,
+            'event' => $this->getEventDirectory().'/'.$name,
+            'listener' => $this->getListenerDirectory().'/'.$listenerName,
         ]);
     }
 
@@ -324,7 +323,8 @@ class MakeModule extends Command
             'directory' => $this->getRequestDirectory(),
         ]);
     }
-#
+
+//
     /**
      * @return void
      */
@@ -357,7 +357,7 @@ class MakeModule extends Command
      */
     protected function getContractName(): string
     {
-        return $this->argument('entity') . 'Contract';
+        return $this->argument('entity').'Contract';
     }
 
     /**
@@ -365,7 +365,7 @@ class MakeModule extends Command
      */
     protected function getContractDirectory(): string
     {
-        return $this->argument('directory') . '/Contracts';
+        return $this->argument('directory').'/Contracts';
     }
 
     /**
@@ -373,7 +373,7 @@ class MakeModule extends Command
      */
     protected function getContractPath()
     {
-        return $this->getContractDirectory() . '/' . $this->getContractName();
+        return $this->getContractDirectory().'/'.$this->getContractName();
     }
 
     /**
@@ -381,7 +381,7 @@ class MakeModule extends Command
      */
     protected function getFilterContractName(): string
     {
-        return $this->argument('entity') . 'FilterContract';
+        return $this->argument('entity').'FilterContract';
     }
 
     /**
@@ -389,7 +389,7 @@ class MakeModule extends Command
      */
     protected function getFilterContractPath()
     {
-        return $this->getContractDirectory() . '/' . $this->getFilterContractName();
+        return $this->getContractDirectory().'/'.$this->getFilterContractName();
     }
 
     /**
@@ -397,7 +397,7 @@ class MakeModule extends Command
      */
     protected function getRepositoryName(): string
     {
-        return $this->argument('entity') . 'Repository';
+        return $this->argument('entity').'Repository';
     }
 
     /**
@@ -405,16 +405,15 @@ class MakeModule extends Command
      */
     protected function getRepositoryDirectory(): string
     {
-        return $this->argument('directory') . '/Repositories';
+        return $this->argument('directory').'/Repositories';
     }
-
 
     /**
      * @return string
      */
     protected function getRepositoryPath()
     {
-        return $this->getRepositoryDirectory() . '/' . $this->getRepositoryName();
+        return $this->getRepositoryDirectory().'/'.$this->getRepositoryName();
     }
 
     /**
@@ -422,7 +421,7 @@ class MakeModule extends Command
      */
     protected function getTransformerName(): string
     {
-        return $this->argument('entity') . 'Transformer';
+        return $this->argument('entity').'Transformer';
     }
 
     /**
@@ -430,7 +429,7 @@ class MakeModule extends Command
      */
     protected function getTransformerDirectory(): string
     {
-        return $this->argument('directory') . '/Transformers';
+        return $this->argument('directory').'/Transformers';
     }
 
     /**
@@ -438,7 +437,7 @@ class MakeModule extends Command
      */
     protected function getTransformerPath()
     {
-        return $this->getTransformerDirectory() . '/' . $this->getTransformerName();
+        return $this->getTransformerDirectory().'/'.$this->getTransformerName();
     }
 
     /**
@@ -446,7 +445,7 @@ class MakeModule extends Command
      */
     protected function getFacadesDirectory(): string
     {
-        return $this->argument('directory') . '/Facades';
+        return $this->argument('directory').'/Facades';
     }
 
     /**
@@ -454,7 +453,7 @@ class MakeModule extends Command
      */
     protected function getFacadesPath(): string
     {
-        return $this->getFacadesDirectory() . '/' . $this->getEntityName();
+        return $this->getFacadesDirectory().'/'.$this->getEntityName();
     }
 
     /**
@@ -462,7 +461,7 @@ class MakeModule extends Command
      */
     protected function getFilterName(): string
     {
-        return $this->argument('entity') . 'Filter';
+        return $this->argument('entity').'Filter';
     }
 
     /**
@@ -470,7 +469,7 @@ class MakeModule extends Command
      */
     protected function getFilterDirectory(): string
     {
-        return $this->argument('directory') . '/Filters';
+        return $this->argument('directory').'/Filters';
     }
 
     /**
@@ -478,7 +477,7 @@ class MakeModule extends Command
      */
     protected function getFilterPath()
     {
-        return $this->getFilterDirectory() . '/' . $this->getFilterName();
+        return $this->getFilterDirectory().'/'.$this->getFilterName();
     }
 
     /**
@@ -486,7 +485,7 @@ class MakeModule extends Command
      */
     protected function getEventDirectory(): string
     {
-        return $this->argument('directory') . '/Events';
+        return $this->argument('directory').'/Events';
     }
 
     /**
@@ -494,7 +493,7 @@ class MakeModule extends Command
      */
     protected function getListenerDirectory(): string
     {
-        return $this->argument('directory') . '/Listener';
+        return $this->argument('directory').'/Listener';
     }
 
     /**
@@ -502,7 +501,7 @@ class MakeModule extends Command
      */
     protected function getJobDirectory(): string
     {
-        return $this->argument('directory') . '/Jobs';
+        return $this->argument('directory').'/Jobs';
     }
 
     /**
@@ -510,7 +509,7 @@ class MakeModule extends Command
      */
     protected function getValueObjectDirectory(): string
     {
-        return $this->argument('directory') . '/ValueObjects';
+        return $this->argument('directory').'/ValueObjects';
     }
 
     /**
@@ -518,7 +517,7 @@ class MakeModule extends Command
      */
     protected function getRequestDirectory(): string
     {
-        return $this->argument('directory') . '/Http/Requests';
+        return $this->argument('directory').'/Http/Requests';
     }
 
     /**
@@ -526,7 +525,7 @@ class MakeModule extends Command
      */
     protected function getControllerDirectory(): string
     {
-        return $this->argument('directory') . '/Http/Controllers';
+        return $this->argument('directory').'/Http/Controllers';
     }
 
     /**
@@ -534,6 +533,6 @@ class MakeModule extends Command
      */
     protected function getNotificationDirectory(): string
     {
-        return $this->argument('directory') . '/Notifications';
+        return $this->argument('directory').'/Notifications';
     }
 }

@@ -30,17 +30,17 @@ class AddEventBindingsToServiceProvider extends Command
     private $files;
 
     /**
-     * @var String
+     * @var string
      */
     protected $serviceProvider = 'EventServiceProvider';
 
     /**
-     * @var String
+     * @var string
      */
     protected $searchStart = '// Generated Events';
 
     /**
-     * @var String
+     * @var string
      */
     protected $searchEnd = '// End Generated Events';
 

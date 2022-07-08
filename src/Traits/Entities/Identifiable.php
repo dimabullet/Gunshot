@@ -20,7 +20,7 @@ trait Identifiable
     }
 
     /**
-     * @param mixed $uuid
+     * @param  mixed  $uuid
      */
     public function setUuid($uuid): void
     {
@@ -29,11 +29,11 @@ trait Identifiable
 
     /**
      * @ORM\PrePersist
+     *
      * @throws \Exception
      */
     public function assignUuid()
     {
         $this->setUuid(Uuid::generate()->string);
     }
-
 }

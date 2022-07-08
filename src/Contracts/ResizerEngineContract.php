@@ -2,10 +2,10 @@
 
 namespace BulletDigitalSolutions\Gunshot\Contracts;
 
-interface FilterEngineContract
+interface ResizerEngineContract
 {
     /**
      * @return string
      */
-    public function toString(array $filters);
+    public function toString(array $filters, $path);
 }

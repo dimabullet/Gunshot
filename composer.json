@@ -22,6 +22,7 @@
         "laravel-doctrine/migrations": "*",
         "laravel-doctrine/orm": "^1.7",
         "laravel/fortify": "*",
+        "laravel/pint": "^0.2.3",
         "webpatser/laravel-uuid": "^4.0"
     },
     "require-dev": {

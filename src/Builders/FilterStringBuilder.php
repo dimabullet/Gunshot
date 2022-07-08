@@ -2,8 +2,6 @@
 
 namespace BulletDigitalSolutions\Gunshot\Builders;
 
-use BulletDigitalSolutions\Gunshot\Contracts\FilterEngineContract;
-
 class FilterStringBuilder
 {
     /**
@@ -16,9 +14,6 @@ class FilterStringBuilder
      */
     private $queryEngine;
 
-    /**
-     *
-     */
     public function __construct($queryEngine)
     {
         $this->queryEngine = $queryEngine;
@@ -35,6 +30,7 @@ class FilterStringBuilder
         }
 
         $this->filters[] = $this->getFilter('where', $field, $value, $operator);
+
         return $this;
     }
 
@@ -44,6 +40,7 @@ class FilterStringBuilder
     public function andWhere($field, $value, $operator = '=')
     {
         $this->filters[] = $this->getFilter('where', $field, $value, $operator);
+
         return $this;
     }
 
@@ -52,38 +49,46 @@ class FilterStringBuilder
      */
     public function orWhere($field, $value, $operator = '=')
     {
-        $this->filters[] =  $this->getFilter('or_where', $field, $value, $operator);
+        $this->filters[] = $this->getFilter('or_where', $field, $value, $operator);
+
         return $this;
     }
 
     /**
      * @param $field
-     * @param array $value
+     * @param  array  $value
      * @return $this
      */
     public function whereIn($field, array $value)
     {
         $this->filters[] = $this->getFilter('where_in', $field, $value, '=');
+
         return $this;
     }
 
     /**
      * @param $field
-     * @param array $value
+     * @param  array  $value
      * @return $this
      */
     public function whereNotIn($field, array $value)
     {
         $this->filters[] = $this->getFilter('where_in', $field, $value, '!=');
+
         return $this;
     }
 
+    /**
+     * @param $closure
+     * @return $this
+     */
     public function group($closure)
     {
         $subQuery = new FilterStringBuilder($this->queryEngine);
         call_user_func($closure, $query = $subQuery);
 
         $this->filters[] = $this->getGroup($subQuery->getFilters());
+
         return $this;
     }
 
@@ -112,7 +117,7 @@ class FilterStringBuilder
     }
 
     /**
-     * @param mixed $queryEngine
+     * @param  mixed  $queryEngine
      */
     public function setQueryEngine($queryEngine): void
     {
@@ -125,7 +130,8 @@ class FilterStringBuilder
      * @param $value
      * @param $operator
      * @return array
-     */private function getFilter($type, $field, $value, $operator)
+     */
+    private function getFilter($type, $field, $value, $operator)
     {
         return [
             'type' => $type,

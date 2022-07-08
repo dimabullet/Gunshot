@@ -25,19 +25,19 @@ class AddViewFolderToConfig extends Command
     protected $description = 'Bind the view folder to the config file';
 
     /**
-     * @var String
+     * @var string
      */
     protected $configFile = 'view.php';
 
     /**
-     * @var String
+     * @var string
      */
     protected $searchStart = "'paths' => [";
 
     /**
-     * @var String
+     * @var string
      */
-    protected $searchEnd = "],";
+    protected $searchEnd = '],';
 
     /**
      * @var Filesystem
@@ -71,7 +71,6 @@ class AddViewFolderToConfig extends Command
      */
     public function getNewRow()
     {
-        return "app_path('Modules/" . $this->argument("directory") . "'),";
+        return "app_path('Modules/".$this->argument('directory')."'),";
     }
-
 }

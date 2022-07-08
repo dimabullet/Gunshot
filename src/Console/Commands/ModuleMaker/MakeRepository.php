@@ -40,6 +40,7 @@ class MakeRepository extends GeneratorCommand
         if ($this->argument('isSearchable')) {
             return __DIR__.'/Stubs/searchable-repository.stub';
         }
+
         return __DIR__.'/Stubs/repository.stub';
     }
 

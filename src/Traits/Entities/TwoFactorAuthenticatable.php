@@ -41,7 +41,7 @@ trait TwoFactorAuthenticatable
     }
 
     /**
-     * @param mixed $twoFactorSecret
+     * @param  mixed  $twoFactorSecret
      */
     public function setTwoFactorSecret($twoFactorSecret): void
     {
@@ -57,7 +57,7 @@ trait TwoFactorAuthenticatable
     }
 
     /**
-     * @param mixed $twoFactorRecoveryCodes
+     * @param  mixed  $twoFactorRecoveryCodes
      */
     public function setTwoFactorRecoveryCodes($twoFactorRecoveryCodes): void
     {
@@ -73,7 +73,7 @@ trait TwoFactorAuthenticatable
     }
 
     /**
-     * @param Carbon|null $twoFactorConfirmedAt
+     * @param  Carbon|null  $twoFactorConfirmedAt
      * @return void
      */
     public function setTwoFactorConfirmedAt(Carbon $twoFactorConfirmedAt = null): void

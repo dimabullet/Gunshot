@@ -39,7 +39,7 @@ class GunshotServiceProvider extends ServiceProvider
 
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__ . '/../config/config.php' => config_path('gunshot.php'),
+                __DIR__.'/../config/config.php' => config_path('gunshot.php'),
             ], 'config');
 
             // Publishing the views.
@@ -70,7 +70,7 @@ class GunshotServiceProvider extends ServiceProvider
         $this->registerCommands();
 
         // Automatically apply the package configuration
-        $this->mergeConfigFrom(__DIR__ . '/../config/config.php', 'gunshot');
+        $this->mergeConfigFrom(__DIR__.'/../config/config.php', 'gunshot');
 
         // Register the main class to use with the facade
         $this->app->singleton('gunshot', function () {

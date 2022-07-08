@@ -30,17 +30,17 @@ class AddFacadeToConfig extends Command
     private $files;
 
     /**
-     * @var String
+     * @var string
      */
     protected $configFile = 'app.php';
 
     /**
-     * @var String
+     * @var string
      */
     protected $searchStart = '// Facades';
 
     /**
-     * @var String
+     * @var string
      */
     protected $searchEnd = '// End Facades';
 
@@ -79,7 +79,7 @@ class AddFacadeToConfig extends Command
      */
     private function getFacadeNamespace()
     {
-        return 'App\\Modules\\' . str_replace('/', '\\', $this->argument('facade'));
+        return 'App\\Modules\\'.str_replace('/', '\\', $this->argument('facade'));
     }
 
     /**
@@ -87,17 +87,18 @@ class AddFacadeToConfig extends Command
      */
     public function getNewRow()
     {
-        return "'" . $this->getFacadeName() . "' => " . $this->getFacadeNamespace() . "::class,";
+        return "'".$this->getFacadeName()."' => ".$this->getFacadeNamespace().'::class,';
     }
 
     /**
-     * @param array $facades
+     * @param  array  $facades
      * @return string
      */
     protected function convertArrayBackToString(array $facades): string
     {
         $facades = implode(PHP_EOL, $facades);
-        $facades = str_replace(PHP_EOL, PHP_EOL . "\t\t", $facades);
-        return PHP_EOL . "\t\t" . $facades . PHP_EOL . "\t\t";
+        $facades = str_replace(PHP_EOL, PHP_EOL."\t\t", $facades);
+
+        return PHP_EOL."\t\t".$facades.PHP_EOL."\t\t";
     }
 }
