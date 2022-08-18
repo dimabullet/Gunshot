@@ -71,6 +71,7 @@ class ImageResizerBuilder
         if (strpos($this->path, '/') === 0) {
             $this->path = substr($this->path, 1);
         }
+
         return $this->path;
     }
 }

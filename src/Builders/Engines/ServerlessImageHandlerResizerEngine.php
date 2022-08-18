@@ -44,8 +44,6 @@ class ServerlessImageHandlerResizerEngine implements ResizerEngineContract
             $additionalParams = '/';
         }
 
-
-
         $url = $url.$additionalParams.$path;
 
         return $url;
@@ -60,7 +58,7 @@ class ServerlessImageHandlerResizerEngine implements ResizerEngineContract
         if (strpos($cdnUrl, 'https://') !== 0) {
             $cdnUrl = 'https://'.$cdnUrl;
         }
+
         return $cdnUrl;
     }
-
 }

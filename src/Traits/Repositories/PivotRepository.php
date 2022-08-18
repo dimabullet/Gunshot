@@ -21,7 +21,7 @@ trait PivotRepository
             $isAttachingToPrimary = false;
             $existing = $this->findOneBy([$this->childName => $attachingTo, $this->parentName => $toAttach]);
         } else {
-            throw new \InvalidArgumentException('$attachingTo must be an instance of ' . $this->parentClass . ' or ' . $this->childClass);
+            throw new \InvalidArgumentException('$attachingTo must be an instance of '.$this->parentClass.' or '.$this->childClass);
         }
 
         if ($isAttachingToPrimary) {
@@ -56,7 +56,7 @@ trait PivotRepository
      */
     public function savePivot($pivot = null, $pivotAttributes = [])
     {
-        if (!$pivot) {
+        if (! $pivot) {
             $pivot = new $this->_entityName;
         }
 
@@ -77,13 +77,26 @@ trait PivotRepository
     }
 
     /**
-     * @param $parent
-     * @param $child
+     * @param $entity1
+     * @param $entity2
      * @return void
      */
-    public function detach($parent, $child)
+    public function detach($entity1, $entity2)
     {
-        $existing = $this->findBy([$this->parentName => $parent, $this->childName => $child]);
+        $existing = $this->findByEntities($entity1, $entity2);
+
+        foreach ($existing as $item) {
+            $this->destroy($item);
+        }
+    }
+
+    /**
+     * @param $entity
+     * @return void
+     */
+    public function detachByPivot($entity, array $pivotSearch = [])
+    {
+        $existing = $this->findByEntity($entity, $pivotSearch);
 
         foreach ($existing as $item) {
             $this->destroy($item);
@@ -93,6 +106,7 @@ trait PivotRepository
     /**
      * @param $entity
      * @return mixed
+     *
      * @throws \Exception
      */
     public function detachAll($entity)
@@ -117,13 +131,13 @@ trait PivotRepository
         $existing = $this->findByEntities($attachingTo, $toAttach);
 
         foreach ($toAttach as $child) {
-            if (!$existing->contains($child)) {
+            if (! $existing->contains($child)) {
                 $this->attach($attachingTo, $child, $pivotAttributes);
             }
         }
 
         foreach ($existing as $child) {
-            if (!$toAttach->contains($child)) {
+            if (! $toAttach->contains($child)) {
                 $this->detach($attachingTo, $child);
             }
         }
@@ -146,16 +160,18 @@ trait PivotRepository
      * @param $entity1
      * @param $entity2
      * @return mixed
+     *
      * @throws \Exception
      */
-    public function findByEntities($entity1, $entity2)
+    public function findByEntities($entity1, $entity2, $pivotSearch = [])
     {
         if ($entity1 instanceof $this->parentClass && $entity2 instanceof $this->childClass) {
-            return $this->findBy([$this->parentName => $entity1, $this->childName => $entity2]);
+            return $this->findBy(array_merge([$this->parentName => $entity1, $this->childName => $entity2], $pivotSearch));
         } elseif ($entity1 instanceof $this->childClass && $entity2 instanceof $this->parentClass) {
-            return $this->findBy([$this->childName => $entity1, $this->parentName => $entity2]);
+            return $this->findBy(array_merge([$this->childName => $entity1, $this->parentName => $entity2], $pivotSearch));
         } else {
-            throw new \Exception('Entity must be an instance of ' . $this->childClass . ' or ' . $this->parentClass);
+//            dd($entity1, $entity2, $pivotSearch);
+            throw new \Exception('Entity must be an instance of '.$this->childClass.' or '.$this->parentClass);
         }
     }
 
@@ -164,13 +180,13 @@ trait PivotRepository
      * @param $children
      * @return mixed
      */
-    public function syncWithoutDetaching($attachingTo, $toAttach = [])
+    public function syncWithoutDetaching($attachingTo, $toAttach = [], $pivotAttributes = [])
     {
-        $existing = $this->findByEntities($attachingTo, $toAttach);
+        $existing = collect($this->findByEntity($attachingTo));
 
         foreach ($toAttach as $child) {
-            if (!$existing->contains($child)) {
-                $this->attach($attachingTo, $child);
+            if (! $existing->contains($child)) {
+                $this->attach($attachingTo, $child, $pivotAttributes);
             }
         }
 
@@ -198,18 +214,19 @@ trait PivotRepository
     /**
      * @param $entity
      * @return mixed
+     *
      * @throws \Exception
      */
-    public function findByEntity($entity)
+    public function findByEntity($entity, $pivotSearch = [])
     {
         if ($entity instanceof $this->childClass) {
-            return $this->findBy([$this->childName => $entity]);
+            return $this->findBy(array_merge([$this->childName => $entity], $pivotSearch));
         }
 
         if ($entity instanceof $this->parentClass) {
-            return $this->findBy([$this->parentName => $entity]);
+            return $this->findBy(array_merge([$this->parentName => $entity], $pivotSearch));
         }
 
-        throw new \Exception('Entity must be an instance of ' . $this->childClass . ' or ' . $this->parentClass);
+        throw new \Exception('Entity must be an instance of '.$this->childClass.' or '.$this->parentClass);
     }
 }
