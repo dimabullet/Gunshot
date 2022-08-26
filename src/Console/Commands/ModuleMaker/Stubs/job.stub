@@ -76,7 +76,9 @@ class DummyClass
      */
     public function dummyEntityGetter()
     {
-        $this->dummyEntityVariable = $this->dummyRepoName->find($this->dummyEntityIdVariable);
+        if ($this->dummyEntityIdVariable) {
+            $this->dummyEntityVariable = $this->dummyRepoName->find($this->dummyEntityIdVariable);
+        }
 
         if (! $this->dummyEntityVariable) {
             $this->isNew = true;
