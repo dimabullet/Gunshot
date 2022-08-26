@@ -32,6 +32,7 @@ trait MakerHelpers
         $stub = str_replace(['DummyEntity', '{{ class }}', '{{class}}'], $this->getEntityName(), $stub);
         $stub = str_replace(['dummyRepoName', '{{ class }}', '{{class}}'], $this->getEntityRepoName(), $stub);
         $stub = str_replace(['dummyEntityGetter', '{{ class }}', '{{class}}'], $this->getEntityGetter(), $stub);
+        $stub = str_replace(['dummySaveEntity', '{{ class }}', '{{class}}'], $this->getSaveEntity(), $stub);
 
         return $this;
     }
@@ -113,6 +114,14 @@ trait MakerHelpers
     private function getEntityGetter()
     {
         return Str::camel('Get ' . $this->argument('entity'));
+    }
+
+    /**
+     * @return array|string|null
+     */
+    private function getSaveEntity()
+    {
+        return Str::camel('Save ' . $this->argument('entity'));
     }
 
     /**

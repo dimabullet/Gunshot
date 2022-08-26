@@ -12,12 +12,10 @@ class DummyClass
     private $dummyEntityVariable;
 
     /**
-     * DummyClass constructor.
      * @param DummyEntity $dummyEntityVariable
      */
     public function __construct(DummyEntity $dummyEntityVariable)
     {
         $this->dummyEntityVariable = $dummyEntityVariable;
     }
-
 }

@@ -9,8 +9,6 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 class DummyClass
 {
     /**
-     * Create the event listener.
-     *
      * @return void
      */
     public function __construct()
@@ -19,8 +17,6 @@ class DummyClass
     }
 
     /**
-     * Handle the event.
-     *
      * @param DummyEvent $event
      * @return void
      * @throws \Doctrine\ORM\ORMException

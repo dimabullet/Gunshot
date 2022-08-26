@@ -32,7 +32,13 @@ class DummyClass
     private $dummyEntityVariable = null;
 
     /**
-     * DummyClass constructor.
+     * @var bool
+     */
+    private bool $isNew = false;
+
+    /**
+     * @param int|null $dummyEntityIdVariable
+     * @param $attributes
      */
     public function __construct(int $dummyEntityIdVariable = null, $attributes = [])
     {
@@ -48,6 +54,8 @@ class DummyClass
         $this
             ->getRepositories()
             ->dummyEntityGetter()
+            ->dummySaveEntity()
+            ->fireEvents()
         ;
 
         return $this->dummyEntityVariable;
@@ -70,7 +78,36 @@ class DummyClass
     {
         $this->dummyEntityVariable = $this->dummyRepoName->find($this->dummyEntityIdVariable);
 
+        if (! $this->dummyEntityVariable) {
+            $this->isNew = true;
+        }
+
         return $this;
     }
 
+    /**
+     * @return $this
+     */
+    public function dummySaveEntity()
+    {
+        $this->dummyEntityVariable = $this->dummyRepoName->save($this->attributes);
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function fireEvents()
+    {
+        if ($this->isNew) {
+            // TODO
+            event(new EventName($this->dummyEntity->getId());
+        } else {
+            // TODO
+            event(new EventName($this->dummyEntity->getId());
+        }
+
+        return $this;
+    }
 }
