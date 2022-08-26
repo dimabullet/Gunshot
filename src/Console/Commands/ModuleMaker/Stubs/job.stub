@@ -3,10 +3,9 @@
 namespace DummyNamespace;
 
 use DummyContractNamespace;
+use DummyEntityNamespace;
 use App\Traits\CurrentUserTrait;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Http\Request;
-use LaravelDoctrine\ORM\Facades\EntityManager;
 
 class DummyClass
 {
@@ -18,19 +17,60 @@ class DummyClass
     private $dummyRepoName;
 
     /**
+     * @var mixed|null
+     */
+    private mixed $dummyEntityIdVariable;
+
+    /**
+     * @var array|mixed
+     */
+    private mixed $attributes;
+
+    /**
+     * @var DummyEntity|mixed
+     */
+    private $dummyEntityVariable = null;
+
+    /**
      * DummyClass constructor.
      */
-    public function __construct()
+    public function __construct(int $dummyEntityIdVariable = null, $attributes = [])
     {
-        $this->dummyRepoName = app(DummyContract::class);
+        $this->dummyEntityIdVariable = $dummyEntityIdVariable;
+        $this->attributes = $attributes;
     }
 
     /**
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @return DummyEntity|mixed|null
      */
     public function handle()
     {
+        $this
+            ->getRepositories()
+            ->dummyEntityGetter()
+        ;
+
+        return $this->dummyEntityVariable;
+    }
+
+    /**
+     * @return $this
+     */
+    public function getRepositories()
+    {
+        $this->dummyRepoName = app(DummyContract::class);
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function dummyEntityGetter()
+    {
+        $this->dummyEntityVariable = $this->dummyRepoName->find($this->dummyEntityIdVariable);
+
+        return $this;
     }
 
 }

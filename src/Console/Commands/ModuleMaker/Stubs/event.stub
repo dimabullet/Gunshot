@@ -3,31 +3,34 @@
 namespace DummyNamespace;
 
 use DummyEntityNamespace;
-use Illuminate\Broadcasting\Channel;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Broadcasting\PresenceChannel;
+use DummyContractNamespace;
 use Illuminate\Foundation\Events\Dispatchable;
-use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
 class DummyClass
 {
     use Dispatchable;
 
     /**
-     * @var DummyEntity
+     * @var integer
      */
-    private $dummyEntityVariable;
+    private $dummyEntityIdVariable;
 
     /**
      * DummyClass constructor.
-     * @param DummyEntity $dummyEntityVariable
+     * @param $dummyEntityVariable
      */
-    public function __construct(DummyEntity $dummyEntityVariable)
+    public function __construct($dummyEntityIdVariable)
     {
-        $this->dummyEntityVariable = $dummyEntityVariable;
+        $this->dummyEntityIdVariable = $dummyEntityIdVariable;
     }
+
+    /**
+     * @return DummyEntity
+     */
+     public function dummyEntityGetter()
+     {
+         return app(DummyContract::class)->find($this->dummyEntityIdVariable);
+     }
 
 }
 

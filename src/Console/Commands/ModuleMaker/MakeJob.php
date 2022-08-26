@@ -50,6 +50,11 @@ class MakeJob extends GeneratorCommand
     {
         $stub = $this->files->get($this->getStub());
 
-        return $this->replaceNamespace($stub, $name)->replaceContract($stub, $name)->replaceEntity($stub, $name)->replaceClass($stub, $name);
+        return $this
+            ->replaceNamespace($stub, $name)
+            ->replaceContract($stub, $name)
+            ->replaceEntity($stub, $name)
+            ->replaceClass($stub, $name)
+            ;
     }
 }

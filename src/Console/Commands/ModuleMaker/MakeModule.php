@@ -259,6 +259,7 @@ class MakeModule extends Command
         Artisan::call('make:module:event', [
             'name' => $name,
             'directory' => $this->getEventDirectory(),
+            'contract' => $this->getContractPath(),
             'entity' => $this->getEntityName(),
         ]);
 

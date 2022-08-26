@@ -14,7 +14,7 @@ class MakeEvent extends GeneratorCommand
      *
      * @var string
      */
-    protected $signature = 'make:module:event {name} {directory} {entity}';
+    protected $signature = 'make:module:event {name} {directory} {contract} {entity}';
 
     /**
      * The console command description.
@@ -50,6 +50,11 @@ class MakeEvent extends GeneratorCommand
     {
         $stub = $this->files->get($this->getStub());
 
-        return $this->replaceNamespace($stub, $name)->replaceEntity($stub, $name)->replaceClass($stub, $name);
+        return $this
+            ->replaceNamespace($stub, $name)
+            ->replaceContract($stub, $name)
+            ->replaceEntity($stub, $name)
+            ->replaceClass($stub, $name)
+            ;
     }
 }

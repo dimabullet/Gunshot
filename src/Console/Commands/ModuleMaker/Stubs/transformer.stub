@@ -8,11 +8,14 @@ use League\Fractal\TransformerAbstract;
 class DummyClass extends TransformerAbstract
 {
     /**
-     * List of resources possible to include
-     *
      * @var array
      */
     protected array $availableIncludes = [];
+
+    /**
+     * @var array
+     */
+    protected array $defaultIncludes = [];
 
     /**
      * @param DummyEntity $dummyEntityVariable

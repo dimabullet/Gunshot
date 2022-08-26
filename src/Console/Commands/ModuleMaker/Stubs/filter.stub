@@ -35,12 +35,11 @@ class DummyClass extends CoreFilter implements DummyContract
         return $this->transform($results);
     }
 
-
     /**
      * @param QueryBuilder $qb
      */
     protected function customFilter(QueryBuilder &$qb)
     {
-        $filters = $this->getFilters();
+        $filters = array_merge($this->getFilters(), $this->getRequest()->all());
     }
 }

@@ -7,6 +7,75 @@ use Illuminate\Support\Str;
 trait MakerHelpers
 {
     /**
+     * @param $stub
+     * @param $name
+     * @return $this
+     */
+    protected function replaceContract(&$stub, $name)
+    {
+        $stub = str_replace(['DummyContractNamespace', '{{ class }}', '{{class}}'], $this->getContractNamespace(), $stub);
+        $stub = str_replace(['DummyContract', '{{ class }}', '{{class}}'], $this->getContractName(), $stub);
+
+        return $this;
+    }
+
+    /**
+     * @param $stub
+     * @param $name
+     * @return $this
+     */
+    protected function replaceEntity(&$stub, $name)
+    {
+        $stub = str_replace(['DummyEntityNamespace', '{{ class }}', '{{class}}'], $this->getEntityNamespace(), $stub);
+        $stub = str_replace(['dummyEntityVariable', '{{ class }}', '{{class}}'], $this->getEntityVariableName(), $stub);
+        $stub = str_replace(['dummyEntityIdVariable', '{{ class }}', '{{class}}'], $this->getEntityIdVariableName(), $stub);
+        $stub = str_replace(['DummyEntity', '{{ class }}', '{{class}}'], $this->getEntityName(), $stub);
+        $stub = str_replace(['dummyRepoName', '{{ class }}', '{{class}}'], $this->getEntityRepoName(), $stub);
+        $stub = str_replace(['dummyEntityGetter', '{{ class }}', '{{class}}'], $this->getEntityGetter(), $stub);
+
+        return $this;
+    }
+
+    /**
+     * @param $stub
+     * @param $name
+     * @return $this
+     */
+    protected function replaceRepository(&$stub, $name)
+    {
+        $stub = str_replace(['DummyRepositoryNamespace', '{{ class }}', '{{class}}'], $this->getRepositoryNamespace(), $stub);
+        $stub = str_replace(['DummyRepository', '{{ class }}', '{{class}}'], $this->getRepositoryName(), $stub);
+
+        return $this;
+    }
+
+    /**
+     * @param $stub
+     * @param $name
+     * @return $this
+     */
+    protected function replaceTransformer(&$stub, $name)
+    {
+        $stub = str_replace(['DummyTransformerNamespace', '{{ class }}', '{{class}}'], $this->getTransformerNamespace(), $stub);
+        $stub = str_replace(['DummyTransformer', '{{ class }}', '{{class}}'], $this->getTransformerName(), $stub);
+
+        return $this;
+    }
+
+    /**
+     * @param $stub
+     * @param $name
+     * @return $this
+     */
+    protected function replaceEvent(&$stub, $name)
+    {
+        $stub = str_replace(['DummyEventNamespace', '{{ class }}', '{{class}}'], $this->getEventNamespace(), $stub);
+        $stub = str_replace(['DummyEvent', '{{ class }}', '{{class}}'], $this->getEventName(), $stub);
+
+        return $this;
+    }
+
+    /**
      * @return array|string|null
      */
     private function getContractNamespace()
@@ -20,19 +89,6 @@ trait MakerHelpers
     private function getContractName()
     {
         return basename($this->argument('contract'));
-    }
-
-    /**
-     * @param $stub
-     * @param $name
-     * @return $this
-     */
-    protected function replaceContract(&$stub, $name)
-    {
-        $stub = str_replace(['DummyContractNamespace', '{{ class }}', '{{class}}'], $this->getContractNamespace(), $stub);
-        $stub = str_replace(['DummyContract', '{{ class }}', '{{class}}'], $this->getContractName(), $stub);
-
-        return $this;
     }
 
     /**
@@ -54,6 +110,14 @@ trait MakerHelpers
     /**
      * @return array|string|null
      */
+    private function getEntityGetter()
+    {
+        return Str::camel('Get ' . $this->argument('entity'));
+    }
+
+    /**
+     * @return array|string|null
+     */
     private function getEntityVariableName()
     {
         return Str::camel($this->argument('entity'));
@@ -62,24 +126,17 @@ trait MakerHelpers
     /**
      * @return array|string|null
      */
-    private function getEntityRepoName()
+    private function getEntityIdVariableName()
     {
-        return Str::camel($this->argument('entity')).'Repo';
+        return Str::camel($this->argument('entity').'Id');
     }
 
     /**
-     * @param $stub
-     * @param $name
-     * @return $this
+     * @return array|string|null
      */
-    protected function replaceEntity(&$stub, $name)
+    private function getEntityRepoName()
     {
-        $stub = str_replace(['DummyEntityNamespace', '{{ class }}', '{{class}}'], $this->getEntityNamespace(), $stub);
-        $stub = str_replace(['dummyEntityVariable', '{{ class }}', '{{class}}'], $this->getEntityVariableName(), $stub);
-        $stub = str_replace(['DummyEntity', '{{ class }}', '{{class}}'], $this->getEntityName(), $stub);
-        $stub = str_replace(['dummyRepoName', '{{ class }}', '{{class}}'], $this->getEntityRepoName(), $stub);
-
-        return $this;
+        return Str::camel($this->argument('entity')).'Repo';
     }
 
     /**
@@ -99,19 +156,6 @@ trait MakerHelpers
     }
 
     /**
-     * @param $stub
-     * @param $name
-     * @return $this
-     */
-    protected function replaceRepository(&$stub, $name)
-    {
-        $stub = str_replace(['DummyRepositoryNamespace', '{{ class }}', '{{class}}'], $this->getRepositoryNamespace(), $stub);
-        $stub = str_replace(['DummyRepository', '{{ class }}', '{{class}}'], $this->getRepositoryName(), $stub);
-
-        return $this;
-    }
-
-    /**
      * @return array|string|null
      */
     private function getTransformerNamespace()
@@ -128,19 +172,6 @@ trait MakerHelpers
     }
 
     /**
-     * @param $stub
-     * @param $name
-     * @return $this
-     */
-    protected function replaceTransformer(&$stub, $name)
-    {
-        $stub = str_replace(['DummyTransformerNamespace', '{{ class }}', '{{class}}'], $this->getTransformerNamespace(), $stub);
-        $stub = str_replace(['DummyTransformer', '{{ class }}', '{{class}}'], $this->getTransformerName(), $stub);
-
-        return $this;
-    }
-
-    /**
      * @return array|string|null
      */
     private function getEventNamespace()
@@ -154,19 +185,6 @@ trait MakerHelpers
     private function getEventName()
     {
         return basename($this->argument('event'));
-    }
-
-    /**
-     * @param $stub
-     * @param $name
-     * @return $this
-     */
-    protected function replaceEvent(&$stub, $name)
-    {
-        $stub = str_replace(['DummyEventNamespace', '{{ class }}', '{{class}}'], $this->getEventNamespace(), $stub);
-        $stub = str_replace(['DummyEvent', '{{ class }}', '{{class}}'], $this->getEventName(), $stub);
-
-        return $this;
     }
 
     /**
