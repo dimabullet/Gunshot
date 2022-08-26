@@ -3,9 +3,27 @@
 namespace DummyNamespace;
 
 use DummyContractNamespace;
+use DummyEntityNamespace;
 use App\Repositories\Core\CoreRepository;
 
 class DummyClass extends CoreRepository implements DummyContract
 {
+    /**
+     * @param DummyEntity|null $dummyEntityVariable
+     * @param $attributes
+     * @return DummyEntity|null
+     */
+    public function save(DummyEntity $dummyEntityVariable = null, $attributes = [])
+    {
+        if (! $dummyEntityVariable) {
+            $dummyEntityVariable = new DummyEntity();
+        }
 
+        // TODO
+
+        $this->_em->persist($dummyEntityVariable);
+        $this->_em->flush();
+
+        return $dummyEntityVariable;
+    }
 }

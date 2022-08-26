@@ -184,12 +184,14 @@ class MakeModule extends Command
         Artisan::call('make:module:contract', [
             'name' => $this->getContractName(),
             'directory' => $this->getContractDirectory(),
+            'entity' => $this->getEntityName(),
         ]);
 
         Artisan::call('make:module:repository', [
             'name' => $this->getRepositoryName(),
             'directory' => $this->getRepositoryDirectory(),
             'contract' => $this->getContractDirectory().'/'.$this->getContractName(),
+            'entity' => $this->getEntityName(),
             'isSearchable' => $isSearchable,
         ]);
 

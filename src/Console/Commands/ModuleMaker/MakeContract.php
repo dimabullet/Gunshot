@@ -14,7 +14,7 @@ class MakeContract extends GeneratorCommand
      *
      * @var string
      */
-    protected $signature = 'make:module:contract {name} {directory}';
+    protected $signature = 'make:module:contract {name} {directory} {entity}';
 
     /**
      * The console command description.
@@ -38,5 +38,22 @@ class MakeContract extends GeneratorCommand
     protected function getStub()
     {
         return __DIR__.'/Stubs/contract.stub';
+    }
+
+    /**
+     * @param  string  $name
+     * @return string
+     *
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     */
+    protected function buildClass($name)
+    {
+        $stub = $this->files->get($this->getStub());
+
+        return $this
+            ->replaceNamespace($stub, $name)
+            ->replaceEntity($stub, $name)
+            ->replaceClass($stub, $name)
+            ;
     }
 }

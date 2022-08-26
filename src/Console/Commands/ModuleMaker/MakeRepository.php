@@ -14,7 +14,7 @@ class MakeRepository extends GeneratorCommand
      *
      * @var string
      */
-    protected $signature = 'make:module:repository {name} {directory} {contract} {isSearchable}';
+    protected $signature = 'make:module:repository {name} {directory} {contract} {entity} {isSearchable}';
 
     /**
      * The console command description.
@@ -54,6 +54,11 @@ class MakeRepository extends GeneratorCommand
     {
         $stub = $this->files->get($this->getStub());
 
-        return $this->replaceNamespace($stub, $name)->replaceContract($stub, $name)->replaceClass($stub, $name);
+        return $this
+            ->replaceNamespace($stub, $name)
+            ->replaceContract($stub, $name)
+            ->replaceEntity($stub, $name)
+            ->replaceClass($stub, $name)
+            ;
     }
 }
