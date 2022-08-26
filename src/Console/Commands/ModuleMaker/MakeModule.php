@@ -164,6 +164,11 @@ class MakeModule extends Command
     protected function makeViewFolder()
     {
         $this->makeDirectory($this->getModuleDirectory('Views'));
+
+        if (config('gunshot.template_engine') === 'inertia') {
+            return;
+        }
+
         $this->makeDirectory($this->getModuleDirectory('Views/'.$this->getViewFolderName()));
 
         Artisan::call('module:config:view:add', [
