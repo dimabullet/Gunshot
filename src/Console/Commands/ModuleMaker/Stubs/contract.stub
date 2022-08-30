@@ -6,10 +6,4 @@ use DummyEntityNamespace;
 
 interface DummyClass
 {
-    /**
-     * @param DummyEntity|null $dummyEntityVariable
-     * @param $attributes
-     * @return DummyEntity|null
-     */
-    public function save(DummyEntity $dummyEntityVariable = null, $attributes = []);
 }

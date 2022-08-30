@@ -104,10 +104,10 @@ class DummyClass
     {
         if ($this->isNew) {
             // TODO
-            event(new EventName($this->dummyEntity->getId());
+            // event(new EventName($this->dummyEntity->getId());
         } else {
             // TODO
-            event(new EventName($this->dummyEntity->getId());
+            // event(new EventName($this->dummyEntity->getId());
         }
 
         return $this;

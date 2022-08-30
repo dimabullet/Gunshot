@@ -239,6 +239,7 @@ class MakeModule extends Command
         Artisan::call('make:module:contract', [
             'name' => $this->getFilterContractName(),
             'directory' => $this->getContractDirectory(),
+            'entity' => $this->getEntityName(),
         ]);
 
         Artisan::call('make:module:filter', [
