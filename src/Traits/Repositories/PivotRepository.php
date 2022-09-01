@@ -3,9 +3,84 @@
 namespace BulletDigitalSolutions\Gunshot\Traits\Repositories;
 
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 
 trait PivotRepository
 {
+    /**
+     * @return string
+     */
+    public function getParentClassName()
+    {
+        return basename(str_replace('\\', '/', $this->parentClass));
+    }
+
+    /**
+     * @return string
+     */
+    public function getChildClassName()
+    {
+        return basename(str_replace('\\', '/', $this->childClass));
+    }
+
+    /**
+     * @return string
+     */
+    public function getParentGetter()
+    {
+        return Str::camel(sprintf('get %s', $this->getParentClassName()));
+    }
+
+    /**
+     * @return string
+     */
+    public function getChildGetter()
+    {
+        return Str::camel(sprintf('get %s', $this->getChildClassName()));
+    }
+
+    /**
+     * @return string
+     */
+    public function getParentSetter()
+    {
+        return Str::camel(sprintf('set %s', $this->getParentClassName()));
+    }
+
+    /**
+     * @return string
+     */
+    public function getChildSetter()
+    {
+        return Str::camel(sprintf('set %s', $this->getChildClassName()));
+    }
+
+    /**
+     * @return string
+     */
+    public function getParentName()
+    {
+        return Str::camel($this->getParentClassName());
+    }
+
+    /**
+     * @return string
+     */
+    public function getChildName()
+    {
+        return Str::camel($this->getChildClassName());
+    }
+
+    /**
+     * @param $pivot
+     * @param $attributes
+     * @return mixed
+     */
+    public function savePivotAttributes($pivot, $attributes = [])
+    {
+        return $pivot;
+    }
+
     /**
      * @param $parent
      * @param $child
@@ -16,10 +91,10 @@ trait PivotRepository
         $isAttachingToPrimary = true;
 
         if ($attachingTo instanceof $this->parentClass) {
-            $existing = $this->findOneBy([$this->parentName => $attachingTo, $this->childName => $toAttach]);
+            $existing = $this->findOneBy([$this->getParentName() => $attachingTo, $this->getChildName() => $toAttach]);
         } elseif ($attachingTo instanceof $this->childClass) {
             $isAttachingToPrimary = false;
-            $existing = $this->findOneBy([$this->childName => $attachingTo, $this->parentName => $toAttach]);
+            $existing = $this->findOneBy([$this->getChildName() => $attachingTo, $this->getParentName() => $toAttach]);
         } else {
             throw new \InvalidArgumentException('$attachingTo must be an instance of '.$this->parentClass.' or '.$this->childClass);
         }
@@ -61,11 +136,19 @@ trait PivotRepository
         }
 
         if ($parent = Arr::get($pivotAttributes, 'parent')) {
-            $pivot->{$this->parentSetter}($parent);
+            if (! $parent instanceof $this->parentClass) {
+                $parent = app($this->parentClass)->getRepository()->find($parent);
+            }
+
+            $pivot->{$this->getParentSetter()}($parent);
         }
 
         if ($child = Arr::get($pivotAttributes, 'child')) {
-            $pivot->{$this->childSetter}($child);
+            if (! $parent instanceof $this->childClass) {
+                $child = app($this->childClass)->getRepository()->find($child);
+            }
+
+            $pivot->{$this->getChildSetter()}($child);
         }
 
         $pivot = $this->savePivotAttributes($pivot, $pivotAttributes);
@@ -128,7 +211,7 @@ trait PivotRepository
      */
     public function sync($attachingTo, $toAttach = [], $pivotAttributes = [])
     {
-        $existing = $this->findByEntities($attachingTo, $toAttach);
+        $existing = collect($this->findByEntities($attachingTo, $toAttach));
 
         foreach ($toAttach as $child) {
             if (! $existing->contains($child)) {
@@ -165,13 +248,13 @@ trait PivotRepository
      */
     public function findByEntities($entity1, $entity2, $pivotSearch = [])
     {
-        if ($entity1 instanceof $this->parentClass && $entity2 instanceof $this->childClass) {
-            return $this->findBy(array_merge([$this->parentName => $entity1, $this->childName => $entity2], $pivotSearch));
-        } elseif ($entity1 instanceof $this->childClass && $entity2 instanceof $this->parentClass) {
-            return $this->findBy(array_merge([$this->childName => $entity1, $this->parentName => $entity2], $pivotSearch));
+        if ($entity1 instanceof $this->parentClass) {
+            return $this->findBy(array_merge([$this->getParentName() => $entity1, $this->getChildName() => $entity2], $pivotSearch));
+        } elseif ($entity1 instanceof $this->childClass) {
+            return $this->findBy(array_merge([$this->getChildName() => $entity1, $this->getParentName() => $entity2], $pivotSearch));
         } else {
 //            dd($entity1, $entity2, $pivotSearch);
-            throw new \Exception('Entity must be an instance of '.$this->childClass.' or '.$this->parentClass);
+            throw new \Exception('Entity must be an instance of '.$this->parentClass.' or '.$this->childClass);
         }
     }
 
@@ -220,11 +303,11 @@ trait PivotRepository
     public function findByEntity($entity, $pivotSearch = [])
     {
         if ($entity instanceof $this->childClass) {
-            return $this->findBy(array_merge([$this->childName => $entity], $pivotSearch));
+            return $this->findBy(array_merge([$this->getChildName() => $entity], $pivotSearch));
         }
 
         if ($entity instanceof $this->parentClass) {
-            return $this->findBy(array_merge([$this->parentName => $entity], $pivotSearch));
+            return $this->findBy(array_merge([$this->getParentName() => $entity], $pivotSearch));
         }
 
         throw new \Exception('Entity must be an instance of '.$this->childClass.' or '.$this->parentClass);
