@@ -144,7 +144,7 @@ trait PivotRepository
         }
 
         if ($child = Arr::get($pivotAttributes, 'child')) {
-            if (! $parent instanceof $this->childClass) {
+            if (! $child instanceof $this->childClass) {
                 $child = app($this->childClass)->getRepository()->find($child);
             }
 
@@ -214,13 +214,26 @@ trait PivotRepository
         $existing = collect($this->findByEntities($attachingTo, $toAttach));
 
         foreach ($toAttach as $child) {
+            if (! $child instanceof $this->childClass) {
+                $child = app($this->childClass)->getRepository()->find($child);
+            }
+
             if (! $existing->contains($child)) {
                 $this->attach($attachingTo, $child, $pivotAttributes);
             }
         }
 
         foreach ($existing as $child) {
-            if (! $toAttach->contains($child)) {
+            $toAttachCollection = collect();
+
+            foreach ($toAttach as $attach) {
+                if (! $attach instanceof $this->childClass) {
+                    $attach = app($this->childClass)->getRepository()->find($attach);
+                }
+                $toAttachCollection->push($attach);
+            }
+
+            if (! $toAttachCollection->contains($child)) {
                 $this->detach($attachingTo, $child);
             }
         }
@@ -253,7 +266,6 @@ trait PivotRepository
         } elseif ($entity1 instanceof $this->childClass) {
             return $this->findBy(array_merge([$this->getChildName() => $entity1, $this->getParentName() => $entity2], $pivotSearch));
         } else {
-//            dd($entity1, $entity2, $pivotSearch);
             throw new \Exception('Entity must be an instance of '.$this->parentClass.' or '.$this->childClass);
         }
     }
