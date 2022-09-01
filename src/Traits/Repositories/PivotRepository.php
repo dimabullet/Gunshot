@@ -144,7 +144,7 @@ trait PivotRepository
         }
 
         if ($child = Arr::get($pivotAttributes, 'child')) {
-            if (! $parent instanceof $this->childClass) {
+            if (! $child instanceof $this->childClass) {
                 $child = app($this->childClass)->getRepository()->find($child);
             }
 
