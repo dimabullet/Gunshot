@@ -92,7 +92,7 @@ class DummyClass
      */
     public function dummySaveEntity()
     {
-        $this->dummyEntityVariable = $this->dummyRepoName->save($this->attributes);
+        $this->dummyEntityVariable = $this->dummyRepoName->save($this->dummyEntityVariable, $this->attributes);
 
         return $this;
     }
