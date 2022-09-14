@@ -213,19 +213,13 @@ trait PivotRepository
     {
         $existing = collect($this->findByEntity($attachingTo));
 
-//        if (count($toAttach) === 0) {
-//            $this->detachAll($attachingTo);
-//            return $attachingTo;
-//        }
+        $existing = $existing->map(function ($item) {
+            return $item->{$this->getChildGetter()}();
+        });
 
-        foreach ($toAttach as $child) {
-            if (! $child instanceof $this->childClass) {
-                $child = app($this->childClass)->getRepository()->find($child);
-            }
-
-            if (! $existing->contains($child)) {
-                $this->attach($attachingTo, $child, $pivotAttributes);
-            }
+        if (count($toAttach) === 0) {
+            $this->detachAll($attachingTo);
+            return $attachingTo;
         }
 
         $toAttachCollection = collect();
@@ -237,12 +231,15 @@ trait PivotRepository
             $toAttachCollection->push($attach);
         }
 
-//        dd($existing, $toAttachCollection);
+        foreach ($toAttachCollection as $child) {
+            if (! $existing->contains($child)) {
+                $this->attach($attachingTo, $child, $pivotAttributes);
+            }
+        }
 
         foreach ($existing as $child) {
-//            dd($existing, $toAttachCollection);
             if (! $toAttachCollection->contains($child)) {
-                $this->detach($attachingTo, $child->{$this->getChildGetter()}());
+                $this->detach($attachingTo, $child);
             }
         }
 
