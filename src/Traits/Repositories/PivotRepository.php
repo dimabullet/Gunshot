@@ -28,7 +28,7 @@ trait PivotRepository
      */
     public function getParentGetter()
     {
-        return Str::camel(sprintf('get %s', $this->getParentClassName()));
+        return Str::camel(sprintf('get %s', Str::kebab($this->getParentName())));
     }
 
     /**
@@ -36,7 +36,7 @@ trait PivotRepository
      */
     public function getChildGetter()
     {
-        return Str::camel(sprintf('get %s', $this->getChildClassName()));
+        return Str::camel(sprintf('get %s', Str::kebab($this->getChildName())));
     }
 
     /**
@@ -44,7 +44,7 @@ trait PivotRepository
      */
     public function getParentSetter()
     {
-        return Str::camel(sprintf('set %s', $this->getParentClassName()));
+        return Str::camel(sprintf('set %s', Str::kebab($this->getParentName())));
     }
 
     /**
@@ -52,7 +52,7 @@ trait PivotRepository
      */
     public function getChildSetter()
     {
-        return Str::camel(sprintf('set %s', $this->getChildClassName()));
+        return Str::camel(sprintf('set %s', Str::kebab($this->getChildName())));
     }
 
     /**
