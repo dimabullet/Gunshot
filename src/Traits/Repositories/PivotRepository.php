@@ -223,16 +223,17 @@ trait PivotRepository
             }
         }
 
-        foreach ($existing as $child) {
-            $toAttachCollection = collect();
+        $toAttachCollection = collect();
 
-            foreach ($toAttach as $attach) {
-                if (! $attach instanceof $this->childClass) {
-                    $attach = app($this->childClass)->getRepository()->find($attach);
-                }
-                $toAttachCollection->push($attach);
+        foreach ($toAttach as $attach) {
+            if (! $attach instanceof $this->childClass) {
+                $attach = app($this->childClass)->getRepository()->find($attach);
             }
+            $toAttachCollection->push($attach);
+        }
 
+        foreach ($existing as $child) {
+            dd([$toAttachCollection, $child]);
             if (! $toAttachCollection->contains($child)) {
                 $this->detach($attachingTo, $child);
             }
