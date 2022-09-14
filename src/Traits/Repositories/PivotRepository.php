@@ -194,7 +194,7 @@ trait PivotRepository
      */
     public function detachAll($entity)
     {
-        $existing = $this->findByEntity($entity);
+        $existing = collect($this->findByEntity($entity));
         $first = $existing?->first();
 
         foreach ($existing as $item) {
@@ -211,7 +211,12 @@ trait PivotRepository
      */
     public function sync($attachingTo, $toAttach = [], $pivotAttributes = [])
     {
-        $existing = collect($this->findByEntities($attachingTo, $toAttach));
+        $existing = collect($this->findByEntity($attachingTo));
+
+//        if (count($toAttach) === 0) {
+//            $this->detachAll($attachingTo);
+//            return $attachingTo;
+//        }
 
         foreach ($toAttach as $child) {
             if (! $child instanceof $this->childClass) {
@@ -232,10 +237,12 @@ trait PivotRepository
             $toAttachCollection->push($attach);
         }
 
+//        dd($existing, $toAttachCollection);
+
         foreach ($existing as $child) {
-            dd([$toAttachCollection, $child]);
+//            dd($existing, $toAttachCollection);
             if (! $toAttachCollection->contains($child)) {
-                $this->detach($attachingTo, $child);
+                $this->detach($attachingTo, $child->{$this->getChildGetter()}());
             }
         }
 
