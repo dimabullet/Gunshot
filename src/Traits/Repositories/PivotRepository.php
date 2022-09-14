@@ -291,6 +291,7 @@ trait PivotRepository
             }
         }
 
+        $this->_em->refresh($attachingTo);
         return $attachingTo;
     }
 
