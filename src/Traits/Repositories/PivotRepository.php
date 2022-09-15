@@ -331,4 +331,15 @@ trait PivotRepository
 
         throw new \Exception('Entity must be an instance of '.$this->childClass.' or '.$this->parentClass);
     }
+
+    /**
+     * @param $entity1
+     * @param $entity2
+     * @return bool
+     * @throws \Exception
+     */
+    public function isAttached($entity1, $entity2)
+    {
+        return count($this->findByEntities($entity1, $entity2)) > 0;
+    }
 }
