@@ -90,6 +90,10 @@ trait PivotRepository
     {
         $isAttachingToPrimary = true;
 
+        if (is_array($toAttach)) {
+            return $this->sync($attachingTo, $toAttach, $pivotAttributes);
+        }
+
         if ($attachingTo instanceof $this->parentClass) {
             $existing = $this->findOneBy([$this->getParentName() => $attachingTo, $this->getChildName() => $toAttach]);
         } elseif ($attachingTo instanceof $this->childClass) {
