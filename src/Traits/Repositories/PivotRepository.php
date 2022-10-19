@@ -346,4 +346,24 @@ trait PivotRepository
     {
         return count($this->findByEntities($entity1, $entity2)) > 0;
     }
+
+    /**
+     * @param $entity
+     * @return mixed
+     * @throws \Exception
+     */
+    public function getRelated($entity)
+    {
+        $pivots = collect($this->findByEntity($entity));
+
+        if ($entity instanceof $this->parentClass) {
+            return $pivots->map(function ($pivot) {
+                return $pivot->{$this->getChildGetter()}();
+            });
+        } else {
+            return $pivots->map(function ($pivot) {
+                return $pivot->{$this->getParentGetter()}();
+            });
+        }
+    }
 }
