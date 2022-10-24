@@ -115,7 +115,8 @@ trait PivotRepository
             ]));
         }
 
-        return $pivot;
+        $this->_em->refresh($attachingTo);
+        return $attachingTo;
     }
 
     /**
@@ -175,6 +176,9 @@ trait PivotRepository
         foreach ($existing as $item) {
             $this->destroy($item);
         }
+
+        $this->_em->refresh($entity1);
+        return $entity1;
     }
 
     /**
@@ -188,6 +192,9 @@ trait PivotRepository
         foreach ($existing as $item) {
             $this->destroy($item);
         }
+
+        $this->_em->refresh($entity);
+        return $entity;
     }
 
     /**
@@ -289,7 +296,20 @@ trait PivotRepository
     {
         $existing = collect($this->findByEntity($attachingTo));
 
-        foreach ($toAttach as $child) {
+        $existing = $existing->map(function ($item) {
+            return $item->{$this->getChildGetter()}();
+        });
+
+        $toAttachCollection = collect();
+
+        foreach ($toAttach as $attach) {
+            if (! $attach instanceof $this->childClass) {
+                $attach = app($this->childClass)->getRepository()->find($attach);
+            }
+            $toAttachCollection->push($attach);
+        }
+
+        foreach ($toAttachCollection as $child) {
             if (! $existing->contains($child)) {
                 $this->attach($attachingTo, $child, $pivotAttributes);
             }
@@ -297,6 +317,17 @@ trait PivotRepository
 
         $this->_em->refresh($attachingTo);
         return $attachingTo;
+    }
+
+    /**
+     * @param $attachingTo
+     * @param $toAttach
+     * @param $pivotAttributes
+     * @return mixed
+     */
+    public function syncWithoutDetach($attachingTo, $toAttach = [], $pivotAttributes = [])
+    {
+        return $this->syncWithoutDetaching($attachingTo, $toAttach, $pivotAttributes);
     }
 
     /**
