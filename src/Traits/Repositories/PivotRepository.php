@@ -171,6 +171,14 @@ trait PivotRepository
      */
     public function detach($entity1, $entity2)
     {
+        if (is_array($entity2)) {
+            foreach ($entity2 as $entity) {
+                $this->detach($entity1, $entity);
+            }
+
+            return $entity1;
+        }
+
         $existing = $this->findByEntities($entity1, $entity2);
 
         foreach ($existing as $item) {
