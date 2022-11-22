@@ -88,31 +88,48 @@ trait PivotRepository
      */
     public function attach($attachingTo, $toAttach, $pivotAttributes = [])
     {
-        $isAttachingToPrimary = true;
-
-        if (is_array($toAttach)) {
-            return $this->sync($attachingTo, $toAttach, $pivotAttributes);
-        }
+        $existing = collect($this->findByEntity($attachingTo));
 
         if ($attachingTo instanceof $this->parentClass) {
-            $existing = $this->findOneBy([$this->getParentName() => $attachingTo, $this->getChildName() => $toAttach]);
-        } elseif ($attachingTo instanceof $this->childClass) {
-            $isAttachingToPrimary = false;
-            $existing = $this->findOneBy([$this->getChildName() => $attachingTo, $this->getParentName() => $toAttach]);
+            $existing = $existing->map(function ($item) {
+                return $item->{$this->getChildGetter()}();
+            });
         } else {
-            throw new \InvalidArgumentException('$attachingTo must be an instance of '.$this->parentClass.' or '.$this->childClass);
+            $existing = $existing->map(function ($item) {
+                return $item->{$this->getParentGetter()}();
+            });
         }
 
-        if ($isAttachingToPrimary) {
-            $pivot = $this->savePivot($existing, array_merge($pivotAttributes, [
-                'parent' => $attachingTo,
-                'child' => $toAttach,
-            ]));
-        } else {
-            $pivot = $this->savePivot($existing, array_merge($pivotAttributes, [
-                'parent' => $toAttach,
-                'child' => $attachingTo,
-            ]));
+        if (count($toAttach) === 0) {
+            $this->detachAll($attachingTo);
+            return $attachingTo;
+        }
+
+        $toAttachCollection = collect();
+
+        foreach ($toAttach as $attach) {
+            // if $attach is a number
+            if (is_numeric($attach)) {
+                if ($attachingTo instanceof $this->parentClass) {
+                    $attach = app($this->childClass)->getRepository()->find($attach);
+                } else {
+                    $attach = app($this->parentClass)->getRepository()->find($attach);
+                }
+            }
+
+            $toAttachCollection->push($attach);
+        }
+
+        foreach ($toAttachCollection as $child) {
+            if (! $existing->contains($child)) {
+                $this->attach($attachingTo, $child, $pivotAttributes);
+            }
+        }
+
+        foreach ($existing as $child) {
+            if (! $toAttachCollection->contains($child)) {
+                $this->detach($attachingTo, $child);
+            }
         }
 
         $this->_em->refresh($attachingTo);
