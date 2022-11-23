@@ -88,48 +88,31 @@ trait PivotRepository
      */
     public function attach($attachingTo, $toAttach, $pivotAttributes = [])
     {
-        $existing = collect($this->findByEntity($attachingTo));
+        $isAttachingToPrimary = true;
+
+        if (is_array($toAttach)) {
+            return $this->sync($attachingTo, $toAttach, $pivotAttributes);
+        }
 
         if ($attachingTo instanceof $this->parentClass) {
-            $existing = $existing->map(function ($item) {
-                return $item->{$this->getChildGetter()}();
-            });
+            $existing = $this->findOneBy([$this->getParentName() => $attachingTo, $this->getChildName() => $toAttach]);
+        } elseif ($attachingTo instanceof $this->childClass) {
+            $isAttachingToPrimary = false;
+            $existing = $this->findOneBy([$this->getChildName() => $attachingTo, $this->getParentName() => $toAttach]);
         } else {
-            $existing = $existing->map(function ($item) {
-                return $item->{$this->getParentGetter()}();
-            });
+            throw new \InvalidArgumentException('$attachingTo must be an instance of '.$this->parentClass.' or '.$this->childClass);
         }
 
-        if (count($toAttach) === 0) {
-            $this->detachAll($attachingTo);
-            return $attachingTo;
-        }
-
-        $toAttachCollection = collect();
-
-        foreach ($toAttach as $attach) {
-            // if $attach is a number
-            if (is_numeric($attach)) {
-                if ($attachingTo instanceof $this->parentClass) {
-                    $attach = app($this->childClass)->getRepository()->find($attach);
-                } else {
-                    $attach = app($this->parentClass)->getRepository()->find($attach);
-                }
-            }
-
-            $toAttachCollection->push($attach);
-        }
-
-        foreach ($toAttachCollection as $child) {
-            if (! $existing->contains($child)) {
-                $this->attach($attachingTo, $child, $pivotAttributes);
-            }
-        }
-
-        foreach ($existing as $child) {
-            if (! $toAttachCollection->contains($child)) {
-                $this->detach($attachingTo, $child);
-            }
+        if ($isAttachingToPrimary) {
+            $pivot = $this->savePivot($existing, array_merge($pivotAttributes, [
+                'parent' => $attachingTo,
+                'child' => $toAttach,
+            ]));
+        } else {
+            $pivot = $this->savePivot($existing, array_merge($pivotAttributes, [
+                'parent' => $toAttach,
+                'child' => $attachingTo,
+            ]));
         }
 
         $this->_em->refresh($attachingTo);
@@ -249,9 +232,15 @@ trait PivotRepository
     {
         $existing = collect($this->findByEntity($attachingTo));
 
-        $existing = $existing->map(function ($item) {
-            return $item->{$this->getChildGetter()}();
-        });
+        if ($attachingTo instanceof $this->parentClass) {
+            $existing = $existing->map(function ($item) {
+                return $item->{$this->getChildGetter()}();
+            });
+        } else {
+            $existing = $existing->map(function ($item) {
+                return $item->{$this->getParentGetter()}();
+            });
+        }
 
         if (count($toAttach) === 0) {
             $this->detachAll($attachingTo);
@@ -261,9 +250,15 @@ trait PivotRepository
         $toAttachCollection = collect();
 
         foreach ($toAttach as $attach) {
-            if (! $attach instanceof $this->childClass) {
-                $attach = app($this->childClass)->getRepository()->find($attach);
+            // if $attach is a number
+            if (is_numeric($attach)) {
+                if ($attachingTo instanceof $this->parentClass) {
+                    $attach = app($this->childClass)->getRepository()->find($attach);
+                } else {
+                    $attach = app($this->parentClass)->getRepository()->find($attach);
+                }
             }
+
             $toAttachCollection->push($attach);
         }
 
