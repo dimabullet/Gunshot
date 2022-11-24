@@ -156,6 +156,7 @@ trait PivotRepository
             $pivot->{$this->getChildSetter()}($child);
         }
 
+
         $pivot = $this->savePivotAttributes($pivot, $pivotAttributes);
 
         $this->_em->persist($pivot);
@@ -360,12 +361,15 @@ trait PivotRepository
     {
         $existing = $this->findByEntities($entity1, $entity2);
 
-        $pivot = $this->savePivot($existing, $pivotAttributes);
+        foreach ($existing as $pivot) {
+            $newPivot = $this->savePivot($pivot, $pivotAttributes);
 
-        $this->_em->persist($pivot);
-        $this->_em->flush();
+            $this->_em->persist($newPivot);
+            $this->_em->flush();
 
-        return $pivot;
+        }
+
+        return $newPivot;
     }
 
     /**
@@ -416,5 +420,54 @@ trait PivotRepository
                 return $pivot->{$this->getParentGetter()}();
             });
         }
+    }
+
+    /**
+     * @param $attachingTo
+     * @param $toAttach
+     * @param $column
+     * @return mixed
+     * @throws \Exception
+     */
+    public function syncPivot($attachingTo, $toAttach = [], $column = 'id')
+    {
+        $existing = collect($this->findByEntity($attachingTo));
+        $toAttachCollection = collect();
+
+        if ($attachingTo instanceof $this->parentClass) {
+            $existing = $existing->map(function ($item) {
+                return $item->{$this->getChildGetter()}();
+            });
+        } else {
+            $existing = $existing->map(function ($item) {
+                return $item->{$this->getParentGetter()}();
+            });
+        }
+
+        foreach ($toAttach as $item) {
+            if ($attachingTo instanceof $this->parentClass) {
+                $child = app($this->childClass)->getRepository()->findOneBy([$column => $item]);
+            } else {
+                $child = app($this->parentClass)->getRepository()->findOneBy([$column => $item]);
+            }
+
+
+            if (! $existing->contains($child)) {
+                $this->attach($attachingTo, $child, $item);
+            } else {
+                $this->updateExistingPivot($attachingTo, $child, $item);
+            }
+
+            $toAttachCollection->push($child);
+        }
+
+        foreach ($existing as $child) {
+            if (! $toAttachCollection->contains($child)) {
+                $this->detach($attachingTo, $child);
+            }
+        }
+
+        $this->_em->refresh($attachingTo);
+        return $attachingTo;
     }
 }
