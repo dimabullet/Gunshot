@@ -58,7 +58,6 @@ class MakeRepository extends GeneratorCommand
             ->replaceNamespace($stub, $name)
             ->replaceContract($stub, $name)
             ->replaceEntity($stub, $name)
-            ->replaceClass($stub, $name)
-            ;
+            ->replaceClass($stub, $name);
     }
 }

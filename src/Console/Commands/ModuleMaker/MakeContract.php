@@ -53,7 +53,6 @@ class MakeContract extends GeneratorCommand
         return $this
             ->replaceNamespace($stub, $name)
             ->replaceEntity($stub, $name)
-            ->replaceClass($stub, $name)
-            ;
+            ->replaceClass($stub, $name);
     }
 }

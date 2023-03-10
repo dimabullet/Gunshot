@@ -113,7 +113,7 @@ trait MakerHelpers
      */
     private function getEntityGetter()
     {
-        return Str::camel('Get ' . $this->argument('entity'));
+        return Str::camel('Get '.$this->argument('entity'));
     }
 
     /**
@@ -121,7 +121,7 @@ trait MakerHelpers
      */
     private function getSaveEntity()
     {
-        return Str::camel('Save ' . $this->argument('entity'));
+        return Str::camel('Save '.$this->argument('entity'));
     }
 
     /**

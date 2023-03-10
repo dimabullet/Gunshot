@@ -116,6 +116,33 @@ trait PivotRepository
         }
 
         $this->_em->refresh($attachingTo);
+
+        return $attachingTo;
+    }
+
+    /**
+     * @param $parent
+     * @param $child
+     * @return mixed
+     */
+    public function forceAttach($attachingTo, $toAttach, $pivotAttributes = [])
+    {
+        $isAttachingToPrimary = true;
+
+        if ($isAttachingToPrimary) {
+            $pivot = $this->savePivot(null, array_merge($pivotAttributes, [
+                'parent' => $attachingTo,
+                'child' => $toAttach,
+            ]));
+        } else {
+            $pivot = $this->savePivot(null, array_merge($pivotAttributes, [
+                'parent' => $toAttach,
+                'child' => $attachingTo,
+            ]));
+        }
+
+        $this->_em->refresh($attachingTo);
+
         return $attachingTo;
     }
 
@@ -156,7 +183,6 @@ trait PivotRepository
             $pivot->{$this->getChildSetter()}($child);
         }
 
-
         $pivot = $this->savePivotAttributes($pivot, $pivotAttributes);
 
         $this->_em->persist($pivot);
@@ -187,6 +213,7 @@ trait PivotRepository
         }
 
         $this->_em->refresh($entity1);
+
         return $entity1;
     }
 
@@ -203,6 +230,7 @@ trait PivotRepository
         }
 
         $this->_em->refresh($entity);
+
         return $entity;
     }
 
@@ -245,6 +273,7 @@ trait PivotRepository
 
         if (count($toAttach) === 0) {
             $this->detachAll($attachingTo);
+
             return $attachingTo;
         }
 
@@ -276,6 +305,7 @@ trait PivotRepository
         }
 
         $this->_em->refresh($attachingTo);
+
         return $attachingTo;
     }
 
@@ -337,6 +367,7 @@ trait PivotRepository
         }
 
         $this->_em->refresh($attachingTo);
+
         return $attachingTo;
     }
 
@@ -366,7 +397,6 @@ trait PivotRepository
 
             $this->_em->persist($newPivot);
             $this->_em->flush();
-
         }
 
         return $newPivot;
@@ -395,6 +425,7 @@ trait PivotRepository
      * @param $entity1
      * @param $entity2
      * @return bool
+     *
      * @throws \Exception
      */
     public function isAttached($entity1, $entity2)
@@ -405,6 +436,7 @@ trait PivotRepository
     /**
      * @param $entity
      * @return mixed
+     *
      * @throws \Exception
      */
     public function getRelated($entity)
@@ -427,6 +459,7 @@ trait PivotRepository
      * @param $toAttach
      * @param $column
      * @return mixed
+     *
      * @throws \Exception
      */
     public function syncPivot($attachingTo, $toAttach = [], $column = 'id')
@@ -451,7 +484,6 @@ trait PivotRepository
                 $child = app($this->parentClass)->getRepository()->findOneBy([$column => $item]);
             }
 
-
             if (! $existing->contains($child)) {
                 $this->attach($attachingTo, $child, $item);
             } else {
@@ -468,6 +500,7 @@ trait PivotRepository
         }
 
         $this->_em->refresh($attachingTo);
+
         return $attachingTo;
     }
 }
