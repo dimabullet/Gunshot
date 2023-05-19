@@ -8,34 +8,42 @@ use Illuminate\Support\Arr;
 class ServerlessImageHandlerResizerEngine implements ResizerEngineContract
 {
     /**
-     * @var
+     * @var string
      */
-    private $cdnUrl;
+    protected string $cdnUrl;
 
     /**
-     * @param $cdnUrl
+     * @var array
      */
-    public function __construct($cdnUrl)
+    protected array $attributes = [];
+
+    /**
+     * @param string $cdnUrl
+     */
+    public function __construct(string $cdnUrl)
     {
         $this->cdnUrl = $cdnUrl;
     }
 
     /**
-     * @param $attributes
-     * @param $path
+     * @param string $path
      * @return string
      */
-    public function toString($attributes, $path)
+    public function toString(string $path): string
     {
         $url = $this->sanitizeCdnUrl($this->cdnUrl);
 
         $additionalParams = [];
 
-        if ($resize = Arr::get($attributes, 'resize')) {
+        if ($resize = Arr::get($this->attributes, 'resize')) {
             if (Arr::get($resize, 'type')) {
                 $additionalParams[] = Arr::get($resize, 'type');
             }
             $additionalParams[] = $resize['width'].'x'.$resize['height'];
+        }
+
+        if ($fileFormat = Arr::get($this->attributes, 'fileFormat')) {
+            $additionalParams[] = 'filters:format(' . $fileFormat . ')';
         }
 
         if ($additionalParams) {
@@ -44,16 +52,14 @@ class ServerlessImageHandlerResizerEngine implements ResizerEngineContract
             $additionalParams = '/';
         }
 
-        $url = $url.$additionalParams.$path;
-
-        return $url;
+        return rtrim($url, '/').$additionalParams.$path;
     }
 
     /**
-     * @param $cdnUrl
-     * @return mixed|string
+     * @param string $cdnUrl
+     * @return string
      */
-    public function sanitizeCdnUrl($cdnUrl)
+    public function sanitizeCdnUrl(string $cdnUrl)
     {
         if (strpos($cdnUrl, 'https://') !== 0) {
             $cdnUrl = 'https://'.$cdnUrl;
@@ -61,4 +67,17 @@ class ServerlessImageHandlerResizerEngine implements ResizerEngineContract
 
         return $cdnUrl;
     }
+
+    /**
+     * @param $key
+     * @param $value
+     * @return $this
+     */
+    public function setAttribute($key, $value): self
+    {
+        $this->attributes[$key] = $value;
+
+        return $this;
+    }
+
 }

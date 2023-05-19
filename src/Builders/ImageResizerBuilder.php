@@ -4,28 +4,25 @@
 
 namespace BulletDigitalSolutions\Gunshot\Builders;
 
+use BulletDigitalSolutions\Gunshot\Contracts\ResizerEngineContract;
+
 class ImageResizerBuilder
 {
-    /**
-     * @var array
-     */
-    protected $attributes = [];
-
-    /**
-     * @var
-     */
-    private $resizerEngine;
 
     /**
      * @var string
      */
-    private $path;
+    protected string $path;
 
-    public function __construct($path, $resizerEngine)
+    /**
+     * @var ResizerEngineContract
+     */
+    protected ResizerEngineContract $resizerEngine;
+
+    public function __construct(string $path, ResizerEngineContract $resizerEngine)
     {
-        $this->resizerEngine = $resizerEngine;
         $this->path = $path;
-        $this->attributes = [];
+        $this->resizerEngine = $resizerEngine;
     }
 
     /**
@@ -34,13 +31,26 @@ class ImageResizerBuilder
      * @param $type
      * @return $this
      */
-    public function resize($width, $height, $type = null)
+    public function resize($width, $height, $type = null): self
     {
-        $this->attributes['resize'] = [
+        $this->resizerEngine->setAttribute('resize', [
             'width' => $width,
             'height' => $height,
             'type' => $type,
-        ];
+        ]);
+
+        return $this;
+    }
+
+    /**
+     * Will allow for filter to be passed such as filters:format(jpeg) where jpeg is the $format
+     *
+     * @param string $format
+     * @return $this
+     */
+    public function fileFormat(string $format): self
+    {
+        $this->resizerEngine->setAttribute('fileFormat', $format);
 
         return $this;
     }
@@ -58,7 +68,10 @@ class ImageResizerBuilder
      */
     public function __toString()
     {
-        return $this->getResizerEngine()->toString($this->attributes, $this->sanitizedPath());
+        return $this
+            ->getResizerEngine()
+            ->toString($this->sanitizedPath())
+        ;
     }
 
     /**
