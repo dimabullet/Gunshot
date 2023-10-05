@@ -46,6 +46,10 @@ class ServerlessImageHandlerResizerEngine implements ResizerEngineContract
             $additionalParams[] = 'filters:format(' . $fileFormat . ')';
         }
 
+        if (Arr::get($this->attributes, 'stripExif', false)) {
+            $additionalParams[] = 'filters:strip_exif()';
+        }
+
         if ($additionalParams) {
             $additionalParams = '/'.implode('/', $additionalParams).'/';
         } else {

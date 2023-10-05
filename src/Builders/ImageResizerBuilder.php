@@ -56,6 +56,16 @@ class ImageResizerBuilder
     }
 
     /**
+     * @return $this
+     */
+    public function stripExif(): self
+    {
+        $this->resizerEngine->setAttribute('stripExif', true);
+
+        return $this;
+    }
+
+    /**
      * @return mixed
      */
     public function getResizerEngine()
